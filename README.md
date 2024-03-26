@@ -12,7 +12,8 @@ open https://nodejs.org/en/download
 # where p5name is our editor.p5js user name
 # run this bash script in the root of your repo
 
-bin/mirror.sh --user p5name
+bin/mirror.sh --user karakkzzk
+
 ```
 
 ## Why ?
