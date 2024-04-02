@@ -1,17 +1,17 @@
 cd "/Users/kkzzk./Documents/GitHub/p5mirror-karakkzzk/downloads/../p5projects"
 #
-echo unzip 1 "ims01-kara.z-LYvffn-eM"
-rm -rf "./ims01-kara.z-LYvffn-eM"
-mkdir "./ims01-kara.z-LYvffn-eM"
-pushd "./ims01-kara.z-LYvffn-eM" > /dev/null
-unzip -q "../../downloads/zips/ims01-kara.z-LYvffn-eM"
-popd > /dev/null
-#
-echo unzip 2 "Innovative crafter-OcjJ4foZE"
+echo unzip 1 "Innovative crafter-OcjJ4foZE"
 rm -rf "./Innovative crafter-OcjJ4foZE"
 mkdir "./Innovative crafter-OcjJ4foZE"
 pushd "./Innovative crafter-OcjJ4foZE" > /dev/null
 unzip -q "../../downloads/zips/Innovative crafter-OcjJ4foZE"
+popd > /dev/null
+#
+echo unzip 2 "ims01-kara.z-LYvffn-eM"
+rm -rf "./ims01-kara.z-LYvffn-eM"
+mkdir "./ims01-kara.z-LYvffn-eM"
+pushd "./ims01-kara.z-LYvffn-eM" > /dev/null
+unzip -q "../../downloads/zips/ims01-kara.z-LYvffn-eM"
 popd > /dev/null
 
 cd ..
