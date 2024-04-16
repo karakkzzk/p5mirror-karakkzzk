@@ -27,18 +27,46 @@ let cw, ch
 let building
 let gl, test, theShader
 let isOrtho, bgGradient, cf
+let fullScreenBtn;
 function setup() {
-  cw = 1000
-  ch = 1000
-  createCanvas(cw, ch, WEBGL)
-  pixelDensity(1)
-  createBgGradient()
-  background(255)
+  // Use window dimensions for canvas size
+  cw = windowWidth;
+  ch = windowHeight;
+  createCanvas(cw, ch, WEBGL);
+  pixelDensity(1);
+  createBgGradient(); // Make sure this function adapts to new cw and ch
+  background(255);
+  lastChangeTime = millis();
 
-  building = new Building()
-  theShader = createFilterShader(frag)
-  cf = floor(random(1000))
+  building = new Building();
+  theShader = createFilterShader(frag);
+  cf = floor(random(1000));
+  
+  fullScreenBtn = createButton("Full Screen");
+  fullScreenBtn.mousePressed(full_screen_action);
+  fullScreenBtn.style("font-size:42px");
 }
+
+function windowResized() {
+  cw = windowWidth;
+  ch = windowHeight;
+  resizeCanvas(cw, ch);
+  createBgGradient(); // Reinitialize the background gradient with new sizes
+  generateNewScene(); // Assuming this function regenerates the building
+}
+
+function full_screen_action() {
+  fullScreenBtn.remove();
+  fullscreen(1);
+  let delay = 3000;
+  setTimeout(ui_present_window, delay);
+}
+
+function ui_present_window() {
+  resizeCanvas(windowWidth, windowHeight);
+  // Reinitialize or adjust your sketch elements as needed here
+}
+
 
 function draw() {
   if (isOrtho) {
@@ -76,7 +104,14 @@ function draw() {
   theShader.setUniform("resolution", [cw, ch])
 
   filter(theShader)
+    // Automatically change the scene every 5 seconds
+  if (millis() - lastChangeTime > 5000) { // 5000 milliseconds = 5 seconds
+    generateNewScene(); // Call the function to change the scene
+    lastChangeTime = millis(); // Reset the timer for the next change
+  }
 }
+
+
 
 let opposites = {
   up: "down",
@@ -86,15 +121,16 @@ let opposites = {
 }
 class Building {
   constructor() {
-    this.w = floor(random(10, 12))
-    this.h = floor(random(10, 12))
-    this.numFloors = floor(random(10, 15))
-    this.xSize = random(50, 80)
-    this.zSize = random(50, 80)
-    this.ySize = random(80, 100)
-    this.floors = []
-    this.initializeCells()
-    this.build()
+    this.w = floor(random(10, 12));
+    this.h = floor(random(10, 12));
+    this.numFloors = floor(random(10, 15));
+    // Dynamically adjust the size of the building parts based on canvas size
+    this.xSize = cw / 20; // Example proportion, adjust based on needs
+    this.zSize = ch / 20; // Same as above, for consistency
+    this.ySize = (cw + ch) / 40; // Adjust based on the average of canvas dimensions
+    this.floors = [];
+    this.initializeCells();
+    this.build();
   }
 
   initializeCells() {
@@ -583,19 +619,15 @@ class Building {
 }
 
 let createBgGradient = () => {
-  let graphics = createGraphics(cw, ch)
-  graphics.pixelDensity(1)
-  let gradient = graphics.drawingContext.createLinearGradient(
-    cw / 2,
-    0,
-    random(cw),
-    ch
-  )
-  gradient.addColorStop(0, "#555")
-  gradient.addColorStop(1, "#AAA")
-  graphics.drawingContext.fillStyle = gradient
-  graphics.rect(0, 0, cw, ch)
-  bgGradient = graphics
+  let graphics = createGraphics(cw, ch);
+  graphics.pixelDensity(1);
+  // Use cw and ch for gradient dimensions
+  let gradient = graphics.drawingContext.createLinearGradient(cw / 2, 0, cw, ch);
+  gradient.addColorStop(0, "#555");
+  gradient.addColorStop(1, "#AAA");
+  graphics.drawingContext.fillStyle = gradient;
+  graphics.rect(0, 0, cw, ch);
+  bgGradient = graphics;
 }
 
 function keyPressed() {
@@ -606,12 +638,12 @@ function keyPressed() {
   }
 }
 
-// Click to generate a new building
-function mouseClicked() {
-  building = new Building()
-  createBgGradient()
-  cf = floor(random(1000))
+function generateNewScene() {
+  building = new Building(); // Regenerate the building
+  createBgGradient(); // Recreate background gradient if needed
+  cf = floor(random(1000)); // If needed for randomization in your drawing logic
 }
+
     
 
 
