@@ -1,5 +1,233 @@
 [
   {
+    "name": "Enchanting nickel",
+    "_id": "foe-KrRvv",
+    "updatedAt": "2024-04-27T03:55:30.247Z",
+    "files": [
+      {
+        "name": "root",
+        "content": "",
+        "children": [
+          "662c6259757167674f91e7b7",
+          "662c6299757167674f91e7ba",
+          "662c6259757167674f91e7b6",
+          "662c6259757167674f91e7b8"
+        ],
+        "fileType": "folder",
+        "_id": "662c6259757167674f91e7b9",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T03:55:30.247Z",
+        "updatedAt": "2024-04-27T03:55:30.247Z",
+        "id": "662c6259757167674f91e7b9"
+      },
+      {
+        "name": "sketch.js",
+        "content": "let video;\nlet handpose;\nlet predictions = [];\nlet zoom = 1;  // Initial zoom level\nlet freeze = false;  // Control freeze state\nlet lastFrame; // To store the last frame when freeze\n\nfunction setup() {\n    createCanvas(640, 480);\n    video = createCapture(VIDEO);\n    video.hide();\n\n    handpose = ml5.handpose(video, () => console.log('Model ready!'));\n    handpose.on('predict', results => predictions = results);\n}\n\nfunction draw() {\n    // Handle freezing and unfreezing visuals\n    if (!freeze) {\n        // Update background and draw video with current zoom\n        background(255);\n        translate(width / 2, height / 2);\n        scale(zoom);\n        image(video, -video.width / 2, -video.height / 2);\n\n        // Store the current frame\n        if (zoom < 2) {\n            lastFrame = get();\n        }\n    } else {\n        // Display the last stored frame\n        image(lastFrame, 0, 0, width, height);\n    }\n\n    drawKeypoints();\n    detectGestures();\n}\n\nfunction detectGestures() {\n    if (predictions.length > 0) {\n        const landmarks = predictions[0].landmarks;\n        const thumbTip = landmarks[4];\n        const pinkyTip = landmarks[20];\n        let distance = dist(thumbTip[0], thumbTip[1], pinkyTip[0], pinkyTip[1]);\n\n        // Check if hand is open\n        if (distance > 100) {\n            if (zoom < 2) {\n                zoom += 0.01;  // Increment zoom if not at limit\n            }\n            freeze = false;  // Ensure visuals are not frozen\n        } else {\n            // Freeze visuals if hand is closed and distance suggests a fist (rock gesture)\n            freeze = true;\n        }\n    } else {\n        // Reset zoom if no hand is detected\n        zoom = 1;\n        freeze = false;\n    }\n}\n\nfunction drawKeypoints() {\n    for (let i = 0; i < predictions.length; i++) {\n        const prediction = predictions[i];\n        for (let j = 0; j < prediction.landmarks.length; j++) {\n            const keypoint = prediction.landmarks[j];\n            fill(0, 255, 0);\n            noStroke();\n            ellipse(keypoint[0], keypoint[1], 10, 10);\n        }\n    }\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c6259757167674f91e7b6",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T03:55:30.247Z",
+        "updatedAt": "2024-04-27T03:55:30.247Z",
+        "id": "662c6259757167674f91e7b6"
+      },
+      {
+        "name": "index.html",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js\"></script>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/addons/p5.sound.min.js\"></script>\n    <script src=\"https://unpkg.com/ml5@latest/dist/ml5.min.js\"></script>\n    <script src=\"sketch.js\"></script>\n    <link rel=\"stylesheet\" href=\"style.css\">\n    <title>Gesture Controlled Visuals</title>\n</head>\n<body>\n    <h1>Gesture Controlled Visuals</h1>\n    <p>Use your hand gestures to control the visuals!</p>\n    <button id=\"instructionButton\">Instructions</button>\n    <div id=\"instructions\">\n        <h2>Instructions</h2>\n        <ol>\n            <li>Position your hand to see different effects on the screen:</li>\n            <li><strong>Paper</strong> (hand open) to zoom in the visuals.</li>\n            <li><strong>Rock</strong> (fist) to freeze the visuals.</li>\n        </ol>\n        <p style=\"text-decoration: underline;\"><strong>Hide instructions</strong></p>\n    </div>\n    <script src=\"instructions.js\"></script>\n</body>\n</html>\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c6259757167674f91e7b7",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T03:55:30.247Z",
+        "updatedAt": "2024-04-27T03:55:30.247Z",
+        "id": "662c6259757167674f91e7b7"
+      },
+      {
+        "name": "style.css",
+        "content": "body, html {\n    margin: 0;\n    padding: 0;\n    font-family: sans-serif;\n    text-align: center;\n    background-color: #fff;\n}\n\ncanvas {\n    display: block;\n    margin: auto;\n}\n\nbutton {\n    background-color: rgb(220, 220, 220);\n    width: 100px;\n    height: 50px;\n    border-radius: 10px;\n    margin: 10px;\n    font-size: 2em;\n    cursor: pointer;\n}\n\n#instructions {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: none;\n    width: 400px;\n    padding: 20px;\n    background-color: rgba(255, 255, 255, 0.9);\n    border-radius: 5px;\n    cursor: pointer;\n}\n\n#instructionButton {\n    width: 100px;\n    font-size: 1em;\n    height: 40px;\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c6259757167674f91e7b8",
+        "isSelectedFile": true,
+        "createdAt": "2024-04-27T03:55:30.247Z",
+        "updatedAt": "2024-04-27T03:55:30.247Z",
+        "id": "662c6259757167674f91e7b8"
+      },
+      {
+        "name": "instructions.js",
+        "content": "// Access the instruction button and the instruction div from the HTML\nconst button = document.getElementById('instructionButton');\nconst instructions = document.getElementById('instructions');\n\n// Event listener for the instruction button to show instructions\nbutton.addEventListener('click', function(){\n    instructions.style.display = \"block\";  // Show instructions when button is clicked\n});\n\n// Event listener for the instructions div to hide instructions when clicked\ninstructions.addEventListener('click', function(){\n    instructions.style.display = \"none\";  // Hide instructions when instructions are clicked\n});\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c6299757167674f91e7ba",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T03:55:30.247Z",
+        "updatedAt": "2024-04-27T03:55:30.247Z",
+        "id": "662c6299757167674f91e7ba"
+      }
+    ],
+    "createdAt": "2024-04-27T02:40:50.710Z",
+    "id": "foe-KrRvv"
+  },
+  {
+    "name": "Frequent reason",
+    "_id": "FpeKSPIgH",
+    "updatedAt": "2024-04-27T02:06:54.012Z",
+    "files": [
+      {
+        "name": "root",
+        "content": "",
+        "children": [
+          "662c584c2cf5e6504dfe6132",
+          "662c584c2cf5e6504dfe6131",
+          "662c584c2cf5e6504dfe6133"
+        ],
+        "fileType": "folder",
+        "_id": "662c584c2cf5e6504dfe6134",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T02:06:54.012Z",
+        "updatedAt": "2024-04-27T02:06:54.012Z",
+        "id": "662c584c2cf5e6504dfe6134"
+      },
+      {
+        "name": "sketch.js",
+        "content": "let handpose;\nlet video;\nlet predictions = [];\nlet modelIsReady = false;\n\nfunction setup() {\n    createCanvas(640, 480);\n    video = createCapture(VIDEO);\n    video.size(width, height);\n\n    handpose = ml5.handpose(video, () => {\n        // Model is ready\n        modelIsReady = true;\n        console.log(\"Model ready!\");\n        // Show the 'Model Ready' button\n        select('#readyButton').style('display', 'block');\n    });\n\n    handpose.on(\"predict\", results => {\n        predictions = results;\n    });\n\n    video.hide();\n    // Initially noLoop() to stop drawing until the model is ready and button is clicked\n    noLoop();\n}\n\nfunction modelReady() {\n    console.log(\"Model ready!\");\n    select('#status').html('Model Loaded');\n}\n\n// Add this function to handle button click and start the sketch\nfunction buttonClicked() {\n    select('#readyButton').style('display', 'none');\n    loop(); // Start the draw loop\n}\n\n// Bind the button click event\nfunction bindButtonEvent() {\n    select('#readyButton').mousePressed(buttonClicked);\n}\n\nfunction draw() {\n    if (modelIsReady) {\n        image(video, 0, 0, width, height);\n        drawKeypoints();\n        // Here you can add your zoom functionality based on the keypoints\n    }\n}\n\n// A function to draw ellipses over the detected keypoints\nfunction drawKeypoints() {\n    for (let i = 0; i < predictions.length; i += 1) {\n        const prediction = predictions[i];\n        for (let j = 0; j < prediction.landmarks.length; j += 1) {\n            const keypoint = prediction.landmarks[j];\n            fill(0, 255, 0);\n            noStroke();\n            ellipse(keypoint[0], keypoint[1], 10, 10);\n        }\n    }\n}\n\n// Call bindButtonEvent after the setup function\nbindButtonEvent();\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c584c2cf5e6504dfe6131",
+        "isSelectedFile": true,
+        "createdAt": "2024-04-27T02:06:54.012Z",
+        "updatedAt": "2024-04-27T02:06:54.012Z",
+        "id": "662c584c2cf5e6504dfe6131"
+      },
+      {
+        "name": "index.html",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Hand Pose Recognition</title>\n    <!-- Include p5.js library -->\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js\"></script>\n    <!-- Include ml5.js library -->\n    <script src=\"https://cdn.jsdelivr.net/npm/ml5@latest/dist/ml5.min.js\"></script>\n    <!-- Your custom style -->\n    <style>\n        #readyButton {\n            display: none;\n            position: absolute;\n            top: 20px;\n            left: 20px;\n            z-index: 5;\n        }\n        body {\n            margin: 0;\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            height: 100vh;\n        }\n    </style>\n</head>\n<body>\n    <button id=\"readyButton\">Model Ready! Click to Try</button>\n    <!-- Link to your JavaScript file -->\n    <script src=\"sketch.js\"></script>\n</body>\n</html>\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c584c2cf5e6504dfe6132",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T02:06:54.012Z",
+        "updatedAt": "2024-04-27T02:06:54.012Z",
+        "id": "662c584c2cf5e6504dfe6132"
+      },
+      {
+        "name": "style.css",
+        "content": "html, body {\n  margin: 0;\n  padding: 0;\n}\ncanvas {\n  display: block;\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c584c2cf5e6504dfe6133",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T02:06:54.012Z",
+        "updatedAt": "2024-04-27T02:06:54.012Z",
+        "id": "662c584c2cf5e6504dfe6133"
+      }
+    ],
+    "createdAt": "2024-04-27T01:50:44.134Z",
+    "id": "FpeKSPIgH"
+  },
+  {
+    "name": "GestureControlledVisuals_Kara_Final",
+    "_id": "2ruTzbg66",
+    "files": [
+      {
+        "name": "root",
+        "content": "",
+        "children": [
+          "663012339a3ae5041e2dc0d8",
+          "663012339a3ae5041e2dc0d9",
+          "663012339a3ae5041e2dc0da"
+        ],
+        "fileType": "folder",
+        "_id": "663012339a3ae5041e2dc0d7",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-29T23:10:16.656Z",
+        "updatedAt": "2024-04-29T23:10:16.656Z",
+        "id": "663012339a3ae5041e2dc0d7"
+      },
+      {
+        "name": "sketch.js",
+        "content": "//https://editor.p5js.org/karakkzzk/sketches/2ruTzbg66\n//GestureControlledVisuals_Kara_Final\n\n//Attributes\n//“noPersp01” by KomaTebehttp://openprocessing.org/sketch/1271843License CreativeCommons Attribution NonCommercial ShareAlikehttps://creativecommons.org/licenses/by-nc-sa/3.0\n//“tw_moebius” by KomaTebehttp://openprocessing.org/sketch/1605344License CreativeCommons Attribution NonCommercial ShareAlikehttps://creativecommons.org/licenses/by-nc-sa/3.0\n//style&ui from: [Rock, Paper, Scissors with Handpose and KNN](https://editor.p5js.org/tlsaeger/sketches/xL2DrkcEb)\n\n\nlet video;\nlet handpose;\nlet predictions = [];\nlet zoom = 1; // Initial zoom level for the visualization\nlet f = 0; // Frame counter for the Moebius strip animation\nlet currentVisual = \"moebius\"; // Initial visual type\nlet newVisualDrawn = false; // Track if the new visual has been drawn\nlet scissorGestureDetected = false; // Track if the scissor gesture has been detected\nlet currentZoomTranslation = 0; // Initial zoom translation\n//const gestureThreshold = 10; // Number of frames the gesture must be held before switching\n\n\nfunction setup() {\n    createCanvas(windowWidth, windowHeight, WEBGL);\n    noStroke();\n\n    // Setup video capture and ml5.js Handpose model\n    video = createCapture(VIDEO);\n    video.size(320, 240);\n    video.hide();  // Hide the HTML element and draw it in p5.js\n    handpose = ml5.handpose(video, () => console.log('Handpose Model Loaded'));\n    handpose.on('predict', results => predictions = results);\n\n    // Initialize instructions and button from existing HTML\n    initInstructions();\n\n    // Initialize full-screen button\n    const fullScreenButton = document.getElementById('fullScreenButton');\n    fullScreenButton.addEventListener('click', toggleFullScreen);\n}\n\n\nfunction draw() {\n    background(0);\n    detectGestures();  // Update zoom and visual based on hand gestures\n\n    // Apply zoom by directly calculating the translation\n    translate(0, 0, (zoom - 1) * -1000);  // Zoom effect by translating the camera\n\n    setupLights();  // Set up the lighting\n\n    // Draw the appropriate visual based on currentVisual\n    if (currentVisual === \"moebius\") {\n        drawMoebiusStrip();\n    } else if (currentVisual === \"newVisual\") {\n        drawNewVisual();\n    }\n}\nfunction resetNewVisualConditions() {\n    newVisualDrawn = false;\n\n}\n\nfunction initNewVisualConditions() {\n    newVisualDrawn = true;\n    // Initialize settings or conditions for the new visual here\n}\n\nfunction windowResized() {\n    resizeCanvas(windowWidth, windowHeight);\n}\n\nfunction setupLights() {\n    [2, -2, 1].map(i => spotLight(255, 255, 255, 0, -400 * i, 400 * i, 0, i, -i));\n}\n\nfunction drawMoebiusStrip() {\n    // Large sphere as the backdrop\n    push();\n    scale(1, 0.5, 1);\n    translate(0, -1700);\n    fill(100);\n    sphere(2000, 33);\n    pop();\n\n    // Moebius strip animation\n    rotate(PI / 2);\n    rotateY(f / 150);\n    fill(255);\n    let max = 400;\n    for (let i = 0; i < max; i++) {\n        let I = i * (PI * 2 / max);\n        push();\n        rotateX(I + f / 50);\n        rotate(I);\n        translate(sin(I) * 80, cos(I) * 120);\n        cylinder(3, 50);\n        if (f % max == i) {\n            translate(30, 0);\n            fill('#D3002C');\n            sphere(28);\n        }\n        pop();\n    }\n    f++;\n}\n\nfunction drawNewVisual() {\n    background(0);\n\n    // Set a more subtle scaling factor\n    push();\n    scale(3);  // Adjust this scaling factor to better fit visual context\n\n    // Lighting and camera controls to match the visual consistency\n    orbitControl(2, 2, 2);\n    rotateY(frameCount * 0.02);\n    rotateX(frameCount * 0.008);\n    rotateZ(frameCount * 0.006);\n\n    // Set lighting to unify the look with the Moebius strip\n    ambientLight(0, 10, 0);\n    specularMaterial(255, 255, 255);\n    pointLight(100, 255, 10, 0, 1000, 0);\n    pointLight(0, 77, 125, 0, -1000, 0);\n\n    // Draw objects with adjusted sizes\n    normalMaterial();\n    rotateX(-QUARTER_PI);\n    rotateY(-QUARTER_PI);\n    box(50);  // Smaller box\n    rotateX(-QUARTER_PI);\n    torus(50, 10, 164, 4);  // Smaller torus\n\n    pop();\n}\n\n\nfunction detectGestures() {\n    if (predictions.length > 0) {\n        const wrist = predictions[0].landmarks[0];  // Wrist coordinate\n        const indexTip = predictions[0].landmarks[8];  // Index finger tip\n        const palmBase = predictions[0].landmarks[0];  // Palm base coordinate\n\n        // Calculate hand orientation based on the angle of the line from wrist to index finger tip\n        const angle = Math.atan2(indexTip[1] - wrist[1], indexTip[0] - wrist[0]);\n\n        // Palm facing upwards (roughly between -π/4 to π/4 radians)\n        if (angle > -Math.PI / 4 && angle < Math.PI / 4) {\n            if (!newVisualDrawn) {\n                currentVisual = \"newVisual\";\n                initNewVisualConditions();\n            }\n        }\n\n        // Palm facing downwards (roughly between 3π/4 to -3π/4 radians)\n        if (angle < -3 * Math.PI / 4 || angle > 3 * Math.PI / 4) {\n            if (newVisualDrawn) {\n                currentVisual = \"moebius\";\n                resetNewVisualConditions();\n            }\n        }\n\n        // Continue with zoom functionality as before\n        let distance = dist(wrist[0], wrist[1], indexTip[0], indexTip[1]);\n        zoom = map(distance, 20, 200, 1, 1.5);\n        zoom = constrain(zoom, 1, 1.5);\n    } else {\n    }\n}\n\nfunction initInstructions() {\n    const instructionButton = document.getElementById('instructionButton');\n    const instructions = document.getElementById('instructions');\n\n    // Toggle instructions when the button is clicked\n    instructionButton.addEventListener('click', () => {\n        toggleInstructions(); // Call a function to toggle instructions\n    });\n\n    // Hide instructions when the instructions div is clicked\n    instructions.addEventListener('click', () => {\n        if (instructions.style.display === 'block') {\n            instructions.style.display = 'none';  // Hide instructions\n            instructionButton.textContent = 'Instructions';\n        }\n    });\n}\n\nfunction toggleInstructions() {\n    // This function toggles the visibility of the instructions\n    const instructions = document.getElementById('instructions');\n    const instructionButton = document.getElementById('instructionButton');\n    if (instructions.style.display === 'block') {\n        instructions.style.display = 'none'; // Hide instructions\n        instructionButton.textContent = 'Instructions';\n    } else {\n        instructions.style.display = 'block'; // Show instructions\n        instructionButton.textContent = 'Hide Instructions';\n    }\n}\n\nfunction toggleFullScreen() {\n    const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement ||\n        document.mozFullScreenElement || document.msFullscreenElement;\n\n    if (!fullscreenElement) {\n        if (document.documentElement.requestFullscreen) {\n            document.documentElement.requestFullscreen();\n        } else if (document.documentElement.webkitRequestFullscreen) {\n            document.documentElement.webkitRequestFullscreen();\n        } else if (document.documentElement.mozRequestFullScreen) {\n            document.documentElement.mozRequestFullScreen();\n        } else if (document.documentElement.msRequestFullscreen) {\n            document.documentElement.msRequestFullscreen();\n        }\n    } else {\n        if (document.exitFullscreen) {\n            document.exitFullscreen();\n        } else if (document.webkitExitFullscreen) {\n            document.webkitExitFullscreen();\n        } else if (document.mozCancelFullScreen) {\n            document.mozCancelFullScreen();\n        } else if (document.msExitFullscreen) {\n            document.msExitFullscreen();\n        }\n    }\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "663012339a3ae5041e2dc0d9",
+        "isSelectedFile": true,
+        "createdAt": "2024-04-29T23:10:16.656Z",
+        "updatedAt": "2024-04-29T23:10:16.656Z",
+        "id": "663012339a3ae5041e2dc0d9"
+      },
+      {
+        "name": "index.html",
+        "content": "\n\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js\"></script>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/addons/p5.sound.min.js\"></script>\n    <script src=\"https://unpkg.com/ml5@latest/dist/ml5.min.js\"></script>\n    <script src=\"sketch.js\"></script>\n    <link rel=\"stylesheet\" href=\"style.css\">\n    <title>Gesture Controlled Visuals</title>\n</head>\n<body>\n    <h1>Gesture Controlled Visuals</h1>\n    <p>Use your hand gestures to control the visuals!</p>\n    <button id=\"instructionButton\">Instructions</button>\n    <button id=\"fullScreenButton\">Full Screen</button>\n\n    <div id=\"instructions\">\n    <h2>Instructions</h2>\n    <ol>\n        <li>Position your hand to see different effects on the screen:</li>\n        <li><strong>Hand open</strong>: Spread your fingers to push away the visuals.</li>\n        <li><strong>Fist</strong>: Close your hand into a fist to draw back the visuals.</li>\n        <li><strong>Palm down</strong>: Rotate your hand to have the palm facing downwards to switch to the new visual.</li>\n        <li><strong>Palm up</strong>: Rotate your hand to have the palm facing upwards to return to the original visual.</li>\n    </ol>\n\n        <p style=\"text-decoration: underline;\"><strong>Hide instructions</strong></p>\n    </div>\n    <script src=\"instructions.js\"></script>\n</body>\n</html>\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "663012339a3ae5041e2dc0d8",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-29T23:10:16.656Z",
+        "updatedAt": "2024-04-29T23:10:16.656Z",
+        "id": "663012339a3ae5041e2dc0d8"
+      },
+      {
+        "name": "style.css",
+        "content": "body, html {\n    margin: 0;\n    padding: 0;\n    font-family: sans-serif;\n    text-align: center;\n    background-color: #fff;\n}\n\ncanvas {\n    display: block;\n    margin: auto;\n}\n\nbutton {\n    background-color: rgb(220, 220, 220);\n    width: 100px;\n    height: 50px;\n    border-radius: 10px;\n    margin: 10px;\n    font-size: 2em;\n    cursor: pointer;\n}\n\n#instructions {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: none;\n    width: 400px;\n    padding: 20px;\n    background-color: rgba(255, 255, 255, 0.9);\n    border-radius: 5px;\n    cursor: pointer;\n}\n\n#instructionButton {\n    width: 100px;\n    font-size: 1em;\n    height: 40px;\n}\n\n#fullScreenButton {\n    width: 100px;\n    font-size: 1em;\n    height: 40px;\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "663012339a3ae5041e2dc0da",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-29T23:10:16.656Z",
+        "updatedAt": "2024-04-29T23:10:16.656Z",
+        "id": "663012339a3ae5041e2dc0da"
+      }
+    ],
+    "createdAt": "2024-04-29T21:33:39.464Z",
+    "updatedAt": "2024-04-29T23:10:16.656Z",
+    "id": "2ruTzbg66"
+  },
+  {
+    "name": "Handpose_Webcam copy",
+    "_id": "_TZB1IIde",
+    "files": [
+      {
+        "name": "root",
+        "content": "",
+        "children": [
+          "662c641458232313781427ad",
+          "662c641458232313781427ae"
+        ],
+        "fileType": "folder",
+        "_id": "662c641458232313781427ac",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T02:35:46.031Z",
+        "updatedAt": "2024-04-27T02:35:46.031Z",
+        "id": "662c641458232313781427ac"
+      },
+      {
+        "name": "sketch.js",
+        "content": "let video;\nlet handpose;\nlet predictions = [];\nlet freeze = false;  // Control freeze state\nlet lastFrame; // To store the last frame when freeze\nlet f = 0;  // Frame counter for the Moebius strip animation\n\nfunction setup() {\n    createCanvas(windowWidth, windowHeight, WEBGL);  // Set canvas size based on window size\n    noStroke();\n    \n    video = createCapture(VIDEO);\n    video.size(160, 120);  // Smaller video size\n    video.hide();  // Hide the default HTML video element\n\n    handpose = ml5.handpose(video, () => console.log('Model ready!'));\n    handpose.on('predict', results => predictions = results);\n\n    frameRate(30); // Adjust frame rate as necessary\n}\n\nfunction windowResized() {\n    resizeCanvas(windowWidth, windowHeight);\n}\n\nfunction draw() {\n    background(0);\n\n    // Moebius strip and environment visuals\n    push();\n    translate(0, -height * 0.25);  // Adjust vertical position relative to height\n    drawMoebiusStrip();\n    pop();\n\n    // Handle the webcam and interactions\n    push();\n    translate(-width / 2 + 85, height / 2 - 60);  // Position webcam view at the bottom-left\n    if (!freeze) {\n        // Show live webcam if not frozen\n        image(video, 0, 0);\n        lastFrame = video.get();  // Capture the current video frame\n    } else {\n        // Show the last captured video frame when frozen\n        image(lastFrame, 0, 0);\n    }\n    pop();\n\n    detectGestures();\n}\n\nfunction drawMoebiusStrip() {\n    // Dynamic lighting and scaling based on canvas size\n    [2, -2, 1].map(i => spotLight(255, 255, 255, 0, -400 * i, 400 * i, 0, i, -i));\n\n    // Backdrop\n    push();\n    scale(1, 0.5, 1);\n    translate(0, -1700);\n    fill(100);\n    sphere(2000, 33);\n    pop();\n\n    // Moebius strip\n    rotate(PI / 2);\n    rotateY(f / 150);\n    fill(255);\n    let max = 400;\n    for (let i = 0; i < max; i++) {\n        let I = i * (PI * 2 / max);\n        push();\n        rotateX(I + f / 50);\n        rotate(I);\n        translate(sin(I) * 80, cos(I) * 120);\n        cylinder(3, 50);\n\n        // Red ball\n        if (f % max == i) {\n            translate(30, 0);\n            pointLight([255], 0, 400, 0);\n            pointLight([255], 0, -400, 0);\n            fill('#D3002C');\n            sphere(28);\n        }\n        pop();\n    }\n    f++;\n}\n\nfunction detectGestures() {\n    if (predictions.length > 0) {\n        const landmarks = predictions[0].landmarks;\n        const thumbTip = landmarks[4];\n        const pinkyTip = landmarks[20];\n        let distance = dist(thumbTip[0], thumbTip[1], pinkyTip[0], pinkyTip[1]);\n\n        if (distance > 100) {\n            freeze = false;\n        } else {\n            freeze = true;\n        }\n    } else {\n        freeze = false;\n    }\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c641458232313781427ae",
+        "isSelectedFile": true,
+        "createdAt": "2024-04-27T02:35:46.031Z",
+        "updatedAt": "2024-04-27T02:35:46.031Z",
+        "id": "662c641458232313781427ae"
+      },
+      {
+        "name": "index.html",
+        "content": "<html>\n  <head>\n    <meta charset=\"UTF-8\" />\n    <title>Handpose with Webcam</title>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js\"></script>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js\"></script>\n    <script src=\"https://unpkg.com/ml5@latest/dist/ml5.min.js\" type=\"text/javascript\"></script>\n  </head>\n  <body>\n    <h1>Handpose with Webcam</h1>\n    <script src=\"sketch.js\"></script>\n  </body>\n</html>\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c641458232313781427ad",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T02:35:46.031Z",
+        "updatedAt": "2024-04-27T02:35:46.031Z",
+        "id": "662c641458232313781427ad"
+      }
+    ],
+    "createdAt": "2024-04-27T02:33:56.609Z",
+    "updatedAt": "2024-04-27T02:35:46.031Z",
+    "id": "_TZB1IIde"
+  },
+  {
     "name": "ims01-kara.z",
     "_id": "LYvffn-eM",
     "updatedAt": "2024-03-26T14:07:44.908Z",
@@ -106,6 +334,136 @@
     ],
     "createdAt": "2024-04-08T19:32:43.814Z",
     "id": "Mtdn3z1CO"
+  },
+  {
+    "name": "ims04_kara.z_ver2",
+    "_id": "tqrzTfi_7",
+    "updatedAt": "2024-04-16T15:16:11.925Z",
+    "files": [
+      {
+        "name": "root",
+        "content": "",
+        "children": [
+          "661e95df03933308844b006d",
+          "661e95e003933308844b0071",
+          "661e95e003933308844b0070",
+          "661e95e003933308844b006e",
+          "661e95df03933308844b006c",
+          "661e95e103933308844b0073",
+          "661e95e003933308844b0072",
+          "661e95e003933308844b006f",
+          "661e95df03933308844b006b"
+        ],
+        "fileType": "folder",
+        "_id": "661e95d503933308844b006a",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-16T15:16:11.925Z",
+        "updatedAt": "2024-04-16T15:16:11.925Z",
+        "id": "661e95d503933308844b006a"
+      },
+      {
+        "name": "ui_init.js",
+        "content": "//\nfunction ui_init() {\n  //\n  //my.effectBtn = ui_createButton('Effect');\n  //my.effectBtn.mousePressed(effect_action);\n\n  my.takeBtn = ui_createButton('Take');\n  my.takeBtn.mousePressed(take_action);\n\n  my.removeBtn = ui_createButton('Remove');\n  my.removeBtn.mousePressed(remove_action);\n\n  //my.showBtn = ui_createButton('Show');\n  //my.showBtn.mousePressed(show_action);\n\n  //my.photo_count_span = createSpan('' + my.photo_list.length);\n\n  my.gallery_div = ui_div_empty('igallery');\n}\n\nfunction effect_action() {\n  my.slit_scan = !my.slit_scan;\n}\n\nasync function take_action() {\n  // console.log('take_action');\n\n  let entry = photo_list_entry(my.photo_index + 1);\n  let path = photo_path_entry(entry);\n\n  let layer = my.canvas;\n  let imageQuality = my.imageQuality;\n  try {\n    await fstorage_upload({ path, layer, imageQuality });\n\n    await photo_list_add(entry);\n\n    dbase_group_update({ photo_index: dbase_increment(1) });\n    //\n  } catch (err) {\n    console.log('take_action err', err);\n  }\n}\n\nasync function remove_action() {\n  // console.log('remove_action photo_count', my.photo_list.length);\n  if (my.photo_list.length < 1) {\n    // No more images in the cloud\n    //  zero out photo_index\n    dbase_group_update({ photo_index: 0 });\n    return;\n  }\n  //\n  // remove the last entry in photo_list\n  //\n  let last = my.photo_list.pop();\n  await photo_list_remove_entry(last);\n\n  // Update photo_list in the cloud\n  dbase_group_update({ photo_list: my.photo_list });\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "661e95df03933308844b006b",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-16T15:16:11.925Z",
+        "updatedAt": "2024-04-16T15:16:11.925Z",
+        "id": "661e95df03933308844b006b"
+      },
+      {
+        "name": "index-1.html",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js\"></script>\n    <!-- <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js\"></script> -->\n\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"https://molab-itp.github.io/p5moRelease/lib/66/style.css\"></script>\n    <!-- <link rel=\"stylesheet\" type=\"text/css\" href=\"../../../p5moLibrary/src/lib/style.css?v=63\" /> -->\n\n    <style></style>\n  </head>\n  <body>\n    <main></main>\n\n    <script type=\"module\" src=\"https://molab-itp.github.io/p5moRelease/lib/70/a_lib.js\"></script>\n    <!-- <script type=\"module\" src=\"../../p5moLibrary/src/lib/a_lib.js\"></script> -->\n\n    <script src=\"a_my_init.js\"></script>\n    <script src=\"ui_init.js\"></script>\n    <script src=\"photo.js\"></script>\n    <script src=\"a_sketch.js\"></script>\n    <!-- ?v=63 included to force into the cache -->\n  </body>\n</html>\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "661e95df03933308844b006c",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-16T15:16:11.925Z",
+        "updatedAt": "2024-04-16T15:16:11.925Z",
+        "id": "661e95df03933308844b006c"
+      },
+      {
+        "name": "a_lib.js",
+        "content": "//\n\n// console.log('in a_main.js');\n\nimport './dbase/a_dbase.js?v=70';\nimport './get_url_params.js?v=70';\nimport './Pane.js?v=70';\nimport './Rect.js?v=70';\nimport './RefBox.js?v=70';\nimport './ui_/ui_logDetail.js?v=70';\nimport './ui_/ui_logSummary.js?v=70';\nimport './ui_/ui_span.js?v=70';\nimport './video_create.js?v=70';\n\n// console.log('a_main Anim ', Anim);\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "661e95df03933308844b006d",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-16T15:16:11.925Z",
+        "updatedAt": "2024-04-16T15:16:11.925Z",
+        "id": "661e95df03933308844b006d"
+      },
+      {
+        "name": "ims04-kara.z_ver2.js",
+        "content": "//https://editor.p5js.org/karakkzzk/sketches/aD2bqoiLh\n//ims04-kara.z\n\n// Attributes: https://editor.p5js.org/jht9629-nyu/sketches/5VKqK34Ps\n// p5moExamples photo booth 70\n\n// Capture canvas pixels to cloud as image jpg or png\n\nlet my = {};\n\nfunction setup() {\n  my_init();\n\n  // set group to share cloud data\n  my.group = 'group1';\n\n  my.photo_index = 0;\n  my.photo_max = 4;\n  my.photo_list = [];\n\n  //new\n  my.slit_scan = false;\n  my.pixel_grid = false;\n  my.chip_grid = false;\n\n  // my.imageQuality = 1;\n  my.imageQuality = 0.1;\n  my.imageExt = '.jpg';\n  // my.imageExt = '.png';\n  my.thumbWidth = my.vwidth / 2;\n\n  // Lowest pixel density for small uploads\n  pixelDensity(1);\n\n  my.canvas = createCanvas(my.width, my.height);\n  my.canvas.mouseReleased(canvas_mouseReleased);\n  my.canvas.touchEnded(canvas_mouseReleased);\n\n  ui_init2();\n  ui_init();\n\n  video_create();\n\n  dbase_app_init({ completed: startup_completed });\n\n  // for moving circle or video scan line\n  my.x = 0;\n  my.y = my.height / 2;\n  my.xstep = 1;\n  my.radius = int(my.width / 10);\n  \n}\n\nfunction startup_completed() {\n  //\n  // dbase_devices_observe({ observed_key, observed_item, all: 1 });\n  // dbase_app_observe({ observed_item });\n  dbase_group_observe({ observed_key, observed_item });\n\n  function observed_key(key, device) {\n    // console.log('observed_a_device key', key, 'uid', my.uid, 'device', device);\n    // console.log('observed_key key', key, 'device.photo_index', device && device.photo_index);\n  }\n\n  function observed_item(device) {\n    // console.log('observed_item device.photo_index', device.photo_index);\n    // console.log('observed_item device.photo_list', device.photo_list);\n    if (device.photo_list != undefined) {\n      my.photo_list = device.photo_list;\n    }\n    if (device.photo_index != undefined) {\n      my.photo_index = device.photo_index;\n    }\n    show_action();\n  }\n}\n\nfunction ui_init2() {\n  // Button to revert to normal view\n  my.normalViewButton = createButton('Normal');\n  my.normalViewButton.mousePressed(() => {\n    my.slit_scan = false;\n    my.pixel_grid = false;\n    my.chip_grid = false;\n  });\n  \n  // Button to toggle slit-scan effect\n  my.slitScanButton = createButton('Slit-Scan');\n  my.slitScanButton.mousePressed(() => my.slit_scan = !my.slit_scan);\n\n  // Button for pixel-grid effect\n  my.pixelGridButton = createButton('Pixel-Grid');\n  my.pixelGridButton.mousePressed(() => {\n    my.pixel_grid = true;\n    my.slit_scan = false;\n    my.chip_grid = false;\n  });\n\n  // Button for mo-pix-chip-grid effect\n  my.chipGridButton = createButton('Mo-Pix-Chip-Grid');\n  my.chipGridButton.mousePressed(() => {\n    my.chip_grid = true;\n    my.slit_scan = false;\n    my.pixel_grid = false;\n  });\n  // Save Photo button\n  my.savePhotoButton = createButton('Save Photo');\n  my.savePhotoButton.mousePressed(savePhoto);\n\n  \n  //my.photo_count_span = createSpan('Photos: 0');\n  //my.photo_count_span.position(10, my.height + 50); \n}\n\nfunction savePhoto() {\n  saveCanvas(my.canvas, 'myPhoto', my.imageExt);\n}\n\n\nfunction draw() {\n  draw_frame();\n  //draw_number(my.photo_index + 1);\n}\n\nfunction draw_frame() {\n  if (my.videoFlag && !video_ready()) return;\n\n  my.videoImg = my.videoFlag ? my.video.get() : null;\n  if (!my.videoImg) return;\n\n  if (my.slit_scan) {\n    draw_scan();\n  } else if (my.pixel_grid) {\n    draw_pixel_grid();\n  } else if (my.chip_grid) {\n    draw_chip_grid();\n  } else {\n    draw_video();\n  }\n\n  my.x = (my.x + my.xstep) % my.width;\n\n  //let str = my.photo_list.length + ' ' + my.photo_index;\n  //my.photo_count_span.html(str);\n}\n\n\nfunction draw_scan() {\n  // my.videoImg.loadPixels();\n  let w = my.videoImg.width;\n  let h = my.videoImg.height;\n  copy(my.videoImg, w / 2, 0, 1, h, my.x, 0, 1, h);\n}\nfunction draw_pixel_grid() {\n  let gridSize = 20; // Size of each grid cell\n  let cols = floor(my.width / gridSize);\n  let rows = floor(my.height / gridSize);\n  for (let i = 0; i < cols; i++) {\n    for (let j = 0; j < rows; j++) {\n      let x = i * gridSize;\n      let y = j * gridSize;\n      let c = my.videoImg.get(x + gridSize / 2, y + gridSize / 2);\n      fill(c);\n      noStroke();\n      rect(x, y, gridSize, gridSize);\n    }\n  }\n}\n\nfunction draw_chip_grid() {\n  let chipSize = 10; // Size of each chip cell\n  let cols = floor(my.width / chipSize);\n  let rows = floor(my.height / chipSize);\n  for (let i = 0; i < cols; i++) {\n    for (let j = 0; j < rows; j++) {\n      let x = i * chipSize;\n      let y = j * chipSize;\n      let c = my.videoImg.get(x + chipSize / 2, y + chipSize / 2);\n      fill(c);\n      stroke(0); // Black borders for chips\n      strokeWeight(0.5);\n      rect(x, y, chipSize, chipSize);\n    }\n  }\n}\n\n\nfunction draw_video() {\n  // background(0);\n  image(my.videoImg, 0, 0);\n  // Draw circle on video\n  noStroke();\n  let index = my.photo_index + 1;\n  fill(my.colors[index % my.colors.length]);\n  circle(my.x, my.y, my.radius);\n}\n\nfunction draw_number(n) {\n  // Convert number to string\n  let str = n + '';\n  let x = 10;\n  let y = my.height;\n  textSize(50);\n  // Draw black rect background\n  let a = textAscent();\n  let d = textDescent();\n  let h = a + d;\n  let w = textWidth(str);\n  fill(0);\n  //rect(x, y - h, w, h);\n  // Draw white text\n  fill(255);\n  // x  y bottom-left corner.\n  text(str, x, y - d);\n}\n\nfunction canvas_mouseReleased() {\n  // console.log('canvas_mouseReleased');\n  track_xy();\n}\n\nfunction track_xy() {\n  let x = mouseX;\n  let y = mouseY;\n}\n\nfunction mouseDragged() {\n  // console.log('mouseDragged');\n  // required to prevent touch drag moving canvas on mobile\n  let onCanvas = mouseX >= 0 && mouseX < width && mouseY >= 0 && mouseY < height;\n  if (onCanvas) {\n    track_xy();\n  }\n  // return my.scrollFlag ? true : !onCanvas;\n  return !onCanvas;\n}\n\nfunction windowResized() {\n  // console.log('windowResized windowHeight', windowHeight, 'windowWidth', windowWidth);\n  // my.isPortrait = windowHeight > windowWidth;\n  if (my.isRemote) {\n    return;\n  }\n  resizeCanvas(windowWidth, windowHeight);\n  // console.log('windowResized width', width, 'height', height);\n}\n\n// https://editor.p5js.org/jht9629-nyu/sketches/twgS6eWRZ\n// pixel-grid\n\n// https://editor.p5js.org/jht9629-nyu/sketches/7Wjlo3pPU\n// mo-pix-chip-grid jht9629 fireb_firebase.js\n\n// https://editor.p5js.org/jht9629-nyu/sketches/CntV1JQNp\n// p5moExamples pixel-grid 47\n\n// [x] Correct display of images - must hit show button\n// [x] Add --> Take, keep array of n images and upate\n// [x] photo_index\n\n// [x] my.photo_list - show only last n\n//    [ { name: \"\", index: n }, ... ]\n\n// [x] preserve image show order\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "661e95e003933308844b006e",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-16T15:16:11.925Z",
+        "updatedAt": "2024-04-16T15:16:11.925Z",
+        "id": "661e95e003933308844b006e"
+      },
+      {
+        "name": "style-1.css",
+        "content": "html, body {\n  margin: 0;\n  padding: 0;\n}\ncanvas {\n  display: block;\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "661e95e003933308844b006f",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-16T15:16:11.925Z",
+        "updatedAt": "2024-04-16T15:16:11.925Z",
+        "id": "661e95e003933308844b006f"
+      },
+      {
+        "name": "a_sketch.js",
+        "content": "//https://editor.p5js.org/karakkzzk/sketches/tqrzTfi_7\n//ims04-kara.z_ver2\n\n// Attributes: https://editor.p5js.org/jht9629-nyu/sketches/5VKqK34Ps\n// p5moExamples photo booth 70\n\n// Capture canvas pixels to cloud as image jpg or png\n\nlet my = {};\n\nfunction setup() {\n  my_init();\n\n  // set group to share cloud data\n  my.group = 'group1';\n\n  my.photo_index = 0;\n  my.photo_max = 4;\n  my.photo_list = [];\n\n  //new\n  my.slit_scan = false;\n  my.pixel_grid = false;\n  my.chip_grid = false;\n\n  // my.imageQuality = 1;\n  my.imageQuality = 0.1;\n  my.imageExt = '.jpg';\n  // my.imageExt = '.png';\n  my.thumbWidth = my.vwidth / 2;\n\n  // Lowest pixel density for small uploads\n  pixelDensity(1);\n\n  my.canvas = createCanvas(my.width, my.height);\n  my.canvas.mouseReleased(canvas_mouseReleased);\n  my.canvas.touchEnded(canvas_mouseReleased);\n\n  ui_init2();\n  ui_init();\n\n  video_create();\n\n  dbase_app_init({ completed: startup_completed });\n\n  // for moving circle or video scan line\n  my.x = 0;\n  my.y = my.height / 2;\n  my.xstep = 1;\n  my.radius = int(my.width / 10);\n  \n}\n\nfunction startup_completed() {\n  //\n  // dbase_devices_observe({ observed_key, observed_item, all: 1 });\n  // dbase_app_observe({ observed_item });\n  dbase_group_observe({ observed_key, observed_item });\n\n  function observed_key(key, device) {\n    // console.log('observed_a_device key', key, 'uid', my.uid, 'device', device);\n    // console.log('observed_key key', key, 'device.photo_index', device && device.photo_index);\n  }\n\n  function observed_item(device) {\n    // console.log('observed_item device.photo_index', device.photo_index);\n    // console.log('observed_item device.photo_list', device.photo_list);\n    if (device.photo_list != undefined) {\n      my.photo_list = device.photo_list;\n    }\n    if (device.photo_index != undefined) {\n      my.photo_index = device.photo_index;\n    }\n    show_action();\n  }\n}\n\nfunction ui_init2() {\n  // Button to revert to normal view\n  my.normalViewButton = createButton('Normal');\n  my.normalViewButton.mousePressed(() => {\n    my.slit_scan = false;\n    my.pixel_grid = false;\n    my.chip_grid = false;\n  });\n  \n  // Button to toggle slit-scan effect\n  my.slitScanButton = createButton('Slit-Scan');\n  my.slitScanButton.mousePressed(() => my.slit_scan = !my.slit_scan);\n\n  // Button for pixel-grid effect\n  my.pixelGridButton = createButton('Pixel-Grid');\n  my.pixelGridButton.mousePressed(() => {\n    my.pixel_grid = true;\n    my.slit_scan = false;\n    my.chip_grid = false;\n  });\n\n  // Button for mo-pix-chip-grid effect\n  my.chipGridButton = createButton('Mo-Pix-Chip-Grid');\n  my.chipGridButton.mousePressed(() => {\n    my.chip_grid = true;\n    my.slit_scan = false;\n    my.pixel_grid = false;\n  });\n  // Save Photo button\n  my.savePhotoButton = createButton('Save Photo');\n  my.savePhotoButton.mousePressed(savePhoto);\n\n  \n  //my.photo_count_span = createSpan('Photos: 0');\n  //my.photo_count_span.position(10, my.height + 50); \n}\n\nfunction savePhoto() {\n  saveCanvas(my.canvas, 'myPhoto', my.imageExt);\n}\n\n\nfunction draw() {\n  draw_frame();\n  //draw_number(my.photo_index + 1);\n}\n\nfunction draw_frame() {\n  if (my.videoFlag && !video_ready()) return;\n\n  my.videoImg = my.videoFlag ? my.video.get() : null;\n  if (!my.videoImg) return;\n\n  if (my.slit_scan) {\n    draw_scan();\n  } else if (my.pixel_grid) {\n    draw_pixel_grid();\n  } else if (my.chip_grid) {\n    draw_chip_grid();\n  } else {\n    draw_video();\n  }\n\n  my.x = (my.x + my.xstep) % my.width;\n\n  //let str = my.photo_list.length + ' ' + my.photo_index;\n  //my.photo_count_span.html(str);\n}\n\n\nfunction draw_scan() {\n  // my.videoImg.loadPixels();\n  let w = my.videoImg.width;\n  let h = my.videoImg.height;\n  copy(my.videoImg, w / 2, 0, 1, h, my.x, 0, 1, h);\n}\nfunction draw_pixel_grid() {\n  let gridSize = 20; // Size of each grid cell\n  let cols = floor(my.width / gridSize);\n  let rows = floor(my.height / gridSize);\n  for (let i = 0; i < cols; i++) {\n    for (let j = 0; j < rows; j++) {\n      let x = i * gridSize;\n      let y = j * gridSize;\n      let c = my.videoImg.get(x + gridSize / 2, y + gridSize / 2);\n      fill(c);\n      noStroke();\n      rect(x, y, gridSize, gridSize);\n    }\n  }\n}\n\nfunction draw_chip_grid() {\n  let chipSize = 10; // Size of each chip cell\n  let cols = floor(my.width / chipSize);\n  let rows = floor(my.height / chipSize);\n  for (let i = 0; i < cols; i++) {\n    for (let j = 0; j < rows; j++) {\n      let x = i * chipSize;\n      let y = j * chipSize;\n      let c = my.videoImg.get(x + chipSize / 2, y + chipSize / 2);\n      fill(c);\n      stroke(0); // Black borders for chips\n      strokeWeight(0.5);\n      rect(x, y, chipSize, chipSize);\n    }\n  }\n}\n\n\nfunction draw_video() {\n  // background(0);\n  image(my.videoImg, 0, 0);\n  // Draw circle on video\n  noStroke();\n  let index = my.photo_index + 1;\n  fill(my.colors[index % my.colors.length]);\n  circle(my.x, my.y, my.radius);\n}\n\nfunction draw_number(n) {\n  // Convert number to string\n  let str = n + '';\n  let x = 10;\n  let y = my.height;\n  textSize(50);\n  // Draw black rect background\n  let a = textAscent();\n  let d = textDescent();\n  let h = a + d;\n  let w = textWidth(str);\n  fill(0);\n  //rect(x, y - h, w, h);\n  // Draw white text\n  fill(255);\n  // x  y bottom-left corner.\n  text(str, x, y - d);\n}\n\nfunction canvas_mouseReleased() {\n  // console.log('canvas_mouseReleased');\n  track_xy();\n}\n\nfunction track_xy() {\n  let x = mouseX;\n  let y = mouseY;\n}\n\nfunction mouseDragged() {\n  // console.log('mouseDragged');\n  // required to prevent touch drag moving canvas on mobile\n  let onCanvas = mouseX >= 0 && mouseX < width && mouseY >= 0 && mouseY < height;\n  if (onCanvas) {\n    track_xy();\n  }\n  // return my.scrollFlag ? true : !onCanvas;\n  return !onCanvas;\n}\n\nfunction windowResized() {\n  // console.log('windowResized windowHeight', windowHeight, 'windowWidth', windowWidth);\n  // my.isPortrait = windowHeight > windowWidth;\n  if (my.isRemote) {\n    return;\n  }\n  resizeCanvas(windowWidth, windowHeight);\n  // console.log('windowResized width', width, 'height', height);\n}\n\n// https://editor.p5js.org/jht9629-nyu/sketches/twgS6eWRZ\n// pixel-grid\n\n// https://editor.p5js.org/jht9629-nyu/sketches/7Wjlo3pPU\n// mo-pix-chip-grid jht9629 fireb_firebase.js\n\n// https://editor.p5js.org/jht9629-nyu/sketches/CntV1JQNp\n// p5moExamples pixel-grid 47\n\n// [x] Correct display of images - must hit show button\n// [x] Add --> Take, keep array of n images and upate\n// [x] photo_index\n\n// [x] my.photo_list - show only last n\n//    [ { name: \"\", index: n }, ... ]\n\n// [x] preserve image show order\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "661e95e003933308844b0070",
+        "isSelectedFile": true,
+        "createdAt": "2024-04-16T15:16:11.925Z",
+        "updatedAt": "2024-04-16T15:16:11.925Z",
+        "id": "661e95e003933308844b0070"
+      },
+      {
+        "name": "a_my_init.js",
+        "content": "//\nfunction my_init() {\n  // updated to verify change on mobile\n  my.version = '?v=63';\n  my.isRemote = 1;\n  my.videoFlag = 1;\n  // show detailed log\n  my.logLoud = 0;\n\n  // Aspect ratio of video capture on mobile device\n  my.vwidth = 480 / 2;\n  my.vheight = 640 / 2;\n  my.fireb_config = 'jht9629';\n  // my.fireb_config = 'jht1493';\n  // my.fireb_config = 'jhtitp';\n\n  my.dbase_rootPath = 'm0-@r-@w-';\n  my.mo_app = 'mo-photo';\n  my.roomName = 'room1';\n\n  // my.nameDevice = '';\n\n  if (my.isRemote) {\n    my.width = my.vwidth;\n    my.height = my.vheight;\n  } else {\n    my.width = windowWidth;\n    my.height = windowHeight;\n  }\n\n  my.colorGold = [187, 165, 61];\n  my.colors = [[255, 0, 0], [0, 255, 0], my.colorGold];\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "661e95e003933308844b0071",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-16T15:16:11.925Z",
+        "updatedAt": "2024-04-16T15:16:11.925Z",
+        "id": "661e95e003933308844b0071"
+      },
+      {
+        "name": "photo.js",
+        "content": "//\n\nfunction photo_name(index) {\n  return index.toString().padStart(3, '0') + my.imageExt;\n}\n\nfunction photo_list_entry(index) {\n  let name = photo_name(index);\n  let uid = my.uid;\n  return { name, index, uid };\n}\n\nfunction photo_path_entry(entry) {\n  return entry.uid + '/' + entry.name;\n}\n\nasync function photo_list_add(entry) {\n  my.photo_list.push(entry);\n  if (my.photo_list.length > my.photo_max) {\n    await photo_list_trim();\n  }\n\n  // Change to photo_list send to cloud\n  dbase_group_update({ photo_list: my.photo_list });\n}\n\nasync function photo_list_trim() {\n  //\n  // remove the first entry in photo_list\n  //\n  let first = my.photo_list.shift();\n  await photo_list_remove_entry(first);\n}\n\nasync function photo_list_remove_entry(entry) {\n  // console.log('photo_list_remove_entry entry', entry);\n\n  let path = photo_path_entry(entry);\n  try {\n    await fstorage_remove({ path });\n    remove_img_index(entry.index);\n  } catch (err) {\n    console.log('show_action err', err);\n  }\n}\n\nfunction remove_img_index(index) {\n  // console.log('remove_img_index index', index);\n  let id = 'id_img_' + index;\n  let img = select('#' + id);\n  // console.log('remove_img_index img', img);\n  if (img) {\n    img.remove();\n  }\n}\n\nasync function show_action() {\n  //\n  // console.log('show_action my.photo_list', my.photo_list);\n  for (let entry of my.photo_list) {\n    let path = photo_path_entry(entry);\n    try {\n      let url = await fstorage_download_url({ path });\n      url_result(url, entry.index);\n    } catch (err) {\n      console.log('show_action err', err);\n    }\n  }\n  function url_result(url, index) {\n    // console.log('url_result index', index, 'url', url);\n    let img = find_img(index);\n    img.elt.src = url;\n  }\n}\n\n// Create image element for an index\n//  or return if already present\n//\nfunction find_img(index) {\n  let id = 'id_img_' + index;\n  let img = select('#' + id);\n  if (!img) {\n    // console.log('show_action id', id);\n    img = createImg('', 'image');\n    img.id(id);\n    // console.log('show_action createImg', img);\n    // my.gallery_div.child(img);\n\n    // Add image as first child to see most recent first\n    my.gallery_div.elt.prepend(img.elt);\n\n    let iwidth = my.thumbWidth;\n    img.style('width: ' + iwidth + 'px;');\n  }\n  return img;\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "661e95e003933308844b0072",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-16T15:16:11.925Z",
+        "updatedAt": "2024-04-16T15:16:11.925Z",
+        "id": "661e95e003933308844b0072"
+      },
+      {
+        "name": "p5.js",
+        "content": "",
+        "children": [],
+        "fileType": "file",
+        "_id": "661e95e103933308844b0073",
+        "url": "https://assets.editor.p5js.org/65f06a42f3ef0f001a8b4c38/51894810-3893-43c0-81c9-84fc4b37218f.js",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-16T15:16:11.925Z",
+        "updatedAt": "2024-04-16T15:16:11.925Z",
+        "id": "661e95e103933308844b0073"
+      }
+    ],
+    "createdAt": "2024-04-16T15:15:13.454Z",
+    "id": "tqrzTfi_7"
   },
   {
     "name": "ims04-kara.z",
@@ -258,6 +616,132 @@
     "id": "OcjJ4foZE"
   },
   {
+    "name": "KaraFinal_v1",
+    "_id": "f8S6e7DSk",
+    "updatedAt": "2024-04-29T22:25:31.722Z",
+    "files": [
+      {
+        "name": "root",
+        "content": "",
+        "children": [
+          "662c64b1c8029d5a5124c2aa",
+          "662c64cdc8029d5a5124c2ad",
+          "662c64b1c8029d5a5124c2a9",
+          "662c64b1c8029d5a5124c2ab"
+        ],
+        "fileType": "folder",
+        "_id": "662c64b1c8029d5a5124c2ac",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-29T22:25:31.722Z",
+        "updatedAt": "2024-04-29T22:25:31.722Z",
+        "id": "662c64b1c8029d5a5124c2ac"
+      },
+      {
+        "name": "sketch.js",
+        "content": "let video;\nlet handpose;\nlet predictions = [];\nlet zoom = 1; // Initial zoom level for the visualization\nlet f = 0; // Frame counter for the Moebius strip animation\nlet currentVisual = \"moebius\"; // Initial visual type\n\nfunction setup() {\n    createCanvas(windowWidth, windowHeight, WEBGL);\n    noStroke();\n\n    // Setup video capture and ml5.js Handpose model\n    video = createCapture(VIDEO);\n    video.size(320, 240);\n    video.hide();  // Hide the HTML element and draw it in p5.js\n    handpose = ml5.handpose(video, () => console.log('Handpose Model Loaded'));\n    handpose.on('predict', results => predictions = results);\n\n    // Initialize instructions and button from existing HTML\n    initInstructions();\n}\n\nfunction draw() {\n    background(0);\n    detectGestures();  // Update zoom and visual based on hand gestures\n\n    // Set the translation for zooming\n    translate(0, 0, (zoom - 1) * -1000);  // Zoom effect by translating the camera\n\n    // Lighting setup\n    setupLights();\n\n    // Draw the appropriate visual based on currentVisual\n    if (currentVisual === \"moebius\") {\n        drawMoebiusStrip();\n    } else if (currentVisual === \"newVisual\") {\n        drawNewVisual();\n    }\n}\n\nfunction windowResized() {\n    resizeCanvas(windowWidth, windowHeight);\n}\n\nfunction setupLights() {\n    [2, -2, 1].map(i => spotLight(255, 255, 255, 0, -400 * i, 400 * i, 0, i, -i));\n}\n\nfunction drawMoebiusStrip() {\n    // Large sphere as the backdrop\n    push();\n    scale(1, 0.5, 1);\n    translate(0, -1700);\n    fill(100);\n    sphere(2000, 33);\n    pop();\n\n    // Moebius strip animation\n    rotate(PI / 2);\n    rotateY(f / 150);\n    fill(255);\n    let max = 400;\n    for (let i = 0; i < max; i++) {\n        let I = i * (PI * 2 / max);\n        push();\n        rotateX(I + f / 50);\n        rotate(I);\n        translate(sin(I) * 80, cos(I) * 120);\n        cylinder(3, 50);\n        if (f % max == i) {\n            translate(30, 0);\n            fill('#D3002C');\n            sphere(28);\n        }\n        pop();\n    }\n    f++;\n}\n\nfunction drawNewVisual() {\n    rotateY(f * 0.01);\n    let w = 100, d = 20;\n    for (let z = -w; z <= w; z += d) {\n        for (let y = -w; y <= w; y += d) {\n            for (let x = -w; x <= w; x += d) {\n                push();\n                translate(x, y, z);\n                sphere((sin(x / w + y / w + z / w + f * 3) / w) * 20);\n                pop();\n            }\n        }\n    }\n    f++;\n}\n\nfunction detectGestures() {\n    if (predictions.length > 0) {\n        const indexTip = predictions[0].landmarks[8]; // Index finger tip\n        const middleTip = predictions[0].landmarks[12]; // Middle finger tip\n\n        // Log for debugging - check in the browser console\n        console.log(\"Index Y:\", indexTip[1], \"Middle Y:\", middleTip[1]);\n\n        // Assuming you want the index finger significantly higher than the middle finger\n        if (indexTip[1] < middleTip[1] - 50) {  // You might need to adjust this threshold\n            currentVisual = \"newVisual\";\n        } else {\n            currentVisual = \"moebius\";\n        }\n\n        // Map the distance so that a larger distance results in a larger zoom\n        let distance = dist(indexTip[0], indexTip[1], middleTip[0], middleTip[1]);\n        zoom = map(distance, 20, 200, 1, 2); // Zoom in when distance increases\n        zoom = constrain(zoom, 1, 2); // Limit the zoom level between 1 (min) and 2 (max)\n    }\n}\n\n\nfunction initInstructions() {\n    const instructionButton = document.getElementById('instructionButton');\n    const instructions = document.getElementById('instructions');\n\n    // Toggle instructions when the button is clicked\n    instructionButton.addEventListener('click', () => {\n        toggleInstructions(); // Call a function to toggle instructions\n    });\n\n    // Hide instructions when the instructions div is clicked\n    instructions.addEventListener('click', () => {\n        if (instructions.style.display === 'block') {\n            instructions.style.display = 'none';  // Hide instructions\n            instructionButton.textContent = 'Instructions';\n        }\n    });\n}\n\nfunction toggleInstructions() {\n    // This function toggles the visibility of the instructions\n    const instructions = document.getElementById('instructions');\n    const instructionButton = document.getElementById('instructionButton');\n    if (instructions.style.display === 'block') {\n        instructions.style.display = 'none'; // Hide instructions\n        instructionButton.textContent = 'Instructions';\n    } else {\n        instructions.style.display = 'block'; // Show instructions\n        instructionButton.textContent = 'Hide Instructions';\n    }\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c64b1c8029d5a5124c2a9",
+        "isSelectedFile": true,
+        "createdAt": "2024-04-29T22:25:31.722Z",
+        "updatedAt": "2024-04-29T22:25:31.722Z",
+        "id": "662c64b1c8029d5a5124c2a9"
+      },
+      {
+        "name": "index.html",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js\"></script>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/addons/p5.sound.min.js\"></script>\n    <script src=\"https://unpkg.com/ml5@latest/dist/ml5.min.js\"></script>\n    <script src=\"sketch.js\"></script>\n    <link rel=\"stylesheet\" href=\"style.css\">\n    <title>Gesture Controlled Visuals</title>\n</head>\n<body>\n    <h1>Gesture Controlled Visuals</h1>\n    <p>Use your hand gestures to control the visuals!</p>\n    <button id=\"instructionButton\">Instructions</button>\n    <div id=\"instructions\">\n        <h2>Instructions</h2>\n        <ol>\n            <li>Position your hand to see different effects on the screen:</li>\n            <li><strong>Paper</strong> (hand open) to push away the visuals.</li>\n            <li><strong>Rock</strong> (fist) to draw back the visuals.</li>\n        </ol>\n        <p style=\"text-decoration: underline;\"><strong>Hide instructions</strong></p>\n    </div>\n    <script src=\"instructions.js\"></script>\n</body>\n</html>\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c64b1c8029d5a5124c2aa",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-29T22:25:31.722Z",
+        "updatedAt": "2024-04-29T22:25:31.722Z",
+        "id": "662c64b1c8029d5a5124c2aa"
+      },
+      {
+        "name": "style.css",
+        "content": "body, html {\n    margin: 0;\n    padding: 0;\n    font-family: sans-serif;\n    text-align: center;\n    background-color: #fff;\n}\n\ncanvas {\n    display: block;\n    margin: auto;\n}\n\nbutton {\n    background-color: rgb(220, 220, 220);\n    width: 100px;\n    height: 50px;\n    border-radius: 10px;\n    margin: 10px;\n    font-size: 2em;\n    cursor: pointer;\n}\n\n#instructions {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: none;\n    width: 400px;\n    padding: 20px;\n    background-color: rgba(255, 255, 255, 0.9);\n    border-radius: 5px;\n    cursor: pointer;\n}\n\n#instructionButton {\n    width: 100px;\n    font-size: 1em;\n    height: 40px;\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c64b1c8029d5a5124c2ab",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-29T22:25:31.722Z",
+        "updatedAt": "2024-04-29T22:25:31.722Z",
+        "id": "662c64b1c8029d5a5124c2ab"
+      },
+      {
+        "name": "instructions.js",
+        "content": "",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c64cdc8029d5a5124c2ad",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-29T22:25:31.722Z",
+        "updatedAt": "2024-04-29T22:25:31.722Z",
+        "id": "662c64cdc8029d5a5124c2ad"
+      }
+    ],
+    "createdAt": "2024-04-27T02:58:23.083Z",
+    "id": "f8S6e7DSk"
+  },
+  {
+    "name": "KaraFinal_v2",
+    "_id": "VvAEyeQ0l",
+    "files": [
+      {
+        "name": "root",
+        "content": "",
+        "children": [
+          "662c7646c8029d5a5124c2b4",
+          "662c7646c8029d5a5124c2b6",
+          "662c7646c8029d5a5124c2b7"
+        ],
+        "fileType": "folder",
+        "_id": "662c7646c8029d5a5124c2b3",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-29T22:42:48.428Z",
+        "updatedAt": "2024-04-29T22:42:48.428Z",
+        "id": "662c7646c8029d5a5124c2b3"
+      },
+      {
+        "name": "sketch.js",
+        "content": "let video;\nlet handpose;\nlet predictions = [];\nlet zoom = 1; // Initial zoom level for the visualization\nlet f = 0; // Frame counter for the Moebius strip animation\nlet currentVisual = \"moebius\"; // Initial visual type\n\nfunction setup() {\n    createCanvas(windowWidth, windowHeight, WEBGL);\n    noStroke();\n\n    // Setup video capture and ml5.js Handpose model\n    video = createCapture(VIDEO);\n    video.size(320, 240);\n    video.hide();  // Hide the HTML element and draw it in p5.js\n    handpose = ml5.handpose(video, () => console.log('Handpose Model Loaded'));\n    handpose.on('predict', results => predictions = results);\n\n    // Initialize instructions and button from existing HTML\n    initInstructions();\n\n    // Initialize full-screen button\n    const fullScreenButton = document.getElementById('fullScreenButton');\n    fullScreenButton.addEventListener('click', toggleFullScreen);\n}\n\nfunction toggleFullScreen() {\n    const canvasElement = document.querySelector('canvas');\n    if (!document.fullscreenElement) {\n        canvasElement.requestFullscreen()\n    } else {\n        document.exitFullscreen();\n    }\n}\n\n\nfunction draw() {\n    background(0);\n    detectGestures();  // Update zoom and visual based on hand gestures\n\n    // Set the translation for zooming\n    translate(0, 0, (zoom - 1) * -1000);  // Zoom effect by translating the camera\n\n    // Lighting setup\n    setupLights();\n\n    // Draw the appropriate visual based on currentVisual\n    if (currentVisual === \"moebius\") {\n        drawMoebiusStrip();\n    } else if (currentVisual === \"newVisual\") {\n        drawNewVisual();\n    }\n}\n\nfunction windowResized() {\n    resizeCanvas(windowWidth, windowHeight);\n}\n\nfunction setupLights() {\n    [2, -2, 1].map(i => spotLight(255, 255, 255, 0, -400 * i, 400 * i, 0, i, -i));\n}\n\nfunction drawMoebiusStrip() {\n    // Large sphere as the backdrop\n    push();\n    scale(1, 0.5, 1);\n    translate(0, -1700);\n    fill(100);\n    sphere(2000, 33);\n    pop();\n\n    // Moebius strip animation\n    rotate(PI / 2);\n    rotateY(f / 150);\n    fill(255);\n    let max = 400;\n    for (let i = 0; i < max; i++) {\n        let I = i * (PI * 2 / max);\n        push();\n        rotateX(I + f / 50);\n        rotate(I);\n        translate(sin(I) * 80, cos(I) * 120);\n        cylinder(3, 50);\n        if (f % max == i) {\n            translate(30, 0);\n            fill('#D3002C');\n            sphere(28);\n        }\n        pop();\n    }\n    f++;\n}\n\nfunction drawNewVisual() {\n    rotateY(f * 0.01);\n    let w = 100, d = 20;\n    for (let z = -w; z <= w; z += d) {\n        for (let y = -w; y <= w; y += d) {\n            for (let x = -w; x <= w; x += d) {\n                push();\n                translate(x, y, z);\n                sphere((sin(x / w + y / w + z / w + f * 3) / w) * 20);\n                pop();\n            }\n        }\n    }\n    f++;\n}\n\nfunction detectGestures() {\n    if (predictions.length > 0) {\n        const indexTip = predictions[0].landmarks[8]; // Index finger tip\n        const middleTip = predictions[0].landmarks[12]; // Middle finger tip\n\n        // Log for debugging - check in the browser console\n        console.log(\"Index Y:\", indexTip[1], \"Middle Y:\", middleTip[1]);\n\n        if (indexTip[1] < middleTip[1] - 50) { \n            currentVisual = \"newVisual\";\n        } else {\n            currentVisual = \"moebius\";\n        }\n\n        // Map the distance so that a larger distance results in a larger zoom\n        let distance = dist(indexTip[0], indexTip[1], middleTip[0], middleTip[1]);\n        zoom = map(distance, 20, 200, 1, 2); // Zoom in when distance increases\n        zoom = constrain(zoom, 1, 2); // Limit the zoom level between 1 (min) and 2 (max)\n    }\n}\n\n\nfunction initInstructions() {\n    const instructionButton = document.getElementById('instructionButton');\n    const instructions = document.getElementById('instructions');\n\n    // Toggle instructions when the button is clicked\n    instructionButton.addEventListener('click', () => {\n        toggleInstructions(); // Call a function to toggle instructions\n    });\n\n    // Hide instructions when the instructions div is clicked\n    instructions.addEventListener('click', () => {\n        if (instructions.style.display === 'block') {\n            instructions.style.display = 'none';  // Hide instructions\n            instructionButton.textContent = 'Instructions';\n        }\n    });\n}\n\nfunction toggleInstructions() {\n    // This function toggles the visibility of the instructions\n    const instructions = document.getElementById('instructions');\n    const instructionButton = document.getElementById('instructionButton');\n    if (instructions.style.display === 'block') {\n        instructions.style.display = 'none'; // Hide instructions\n        instructionButton.textContent = 'Instructions';\n    } else {\n        instructions.style.display = 'block'; // Show instructions\n        instructionButton.textContent = 'Hide Instructions';\n    }\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c7646c8029d5a5124c2b6",
+        "isSelectedFile": true,
+        "createdAt": "2024-04-29T22:42:48.428Z",
+        "updatedAt": "2024-04-29T22:42:48.428Z",
+        "id": "662c7646c8029d5a5124c2b6"
+      },
+      {
+        "name": "index.html",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js\"></script>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/addons/p5.sound.min.js\"></script>\n    <script src=\"https://unpkg.com/ml5@latest/dist/ml5.min.js\"></script>\n    <script src=\"sketch.js\"></script>\n    <link rel=\"stylesheet\" href=\"style.css\">\n    <title>Gesture Controlled Visuals</title>\n</head>\n<body>\n    <h1>Gesture Controlled Visuals</h1>\n    <p>Use your hand gestures to control the visuals!</p>\n    <button id=\"instructionButton\">Instructions</button>\n    <button id=\"fullScreenButton\">Full Screen</button>\n\n    <div id=\"instructions\">\n        <h2>Instructions</h2>\n        <ol>\n            <li>Position your hand to see different effects on the screen:</li>\n            <li><strong>Paper</strong> (hand open) to push away the visuals.</li>\n            <li><strong>Rock</strong> (fist) to draw back the visuals.</li>\n        </ol>\n        <p style=\"text-decoration: underline;\"><strong>Hide instructions</strong></p>\n    </div>\n    <script src=\"instructions.js\"></script>\n</body>\n</html>\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c7646c8029d5a5124c2b4",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-29T22:42:48.428Z",
+        "updatedAt": "2024-04-29T22:42:48.428Z",
+        "id": "662c7646c8029d5a5124c2b4"
+      },
+      {
+        "name": "style.css",
+        "content": "body, html {\n    margin: 0;\n    padding: 0;\n    font-family: sans-serif;\n    text-align: center;\n    background-color: #fff;\n}\n\ncanvas {\n    display: block;\n    margin: auto;\n}\n\nbutton {\n    background-color: rgb(220, 220, 220);\n    width: 100px;\n    height: 50px;\n    border-radius: 10px;\n    margin: 10px;\n    font-size: 2em;\n    cursor: pointer;\n}\n\n#instructions {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: none;\n    width: 400px;\n    padding: 20px;\n    background-color: rgba(255, 255, 255, 0.9);\n    border-radius: 5px;\n    cursor: pointer;\n}\n\n#instructionButton {\n    width: 100px;\n    font-size: 1em;\n    height: 40px;\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c7646c8029d5a5124c2b7",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-29T22:42:48.428Z",
+        "updatedAt": "2024-04-29T22:42:48.428Z",
+        "id": "662c7646c8029d5a5124c2b7"
+      }
+    ],
+    "createdAt": "2024-04-27T03:51:34.727Z",
+    "updatedAt": "2024-04-29T22:42:48.428Z",
+    "id": "VvAEyeQ0l"
+  },
+  {
     "name": "p5moExamples photo booth 70 copy",
     "_id": "-v7NuIZk5",
     "files": [
@@ -349,5 +833,488 @@
     "createdAt": "2024-04-15T17:05:10.820Z",
     "updatedAt": "2024-04-15T17:55:42.314Z",
     "id": "-v7NuIZk5"
+  },
+  {
+    "name": "Push and Draw add in visuals attempt",
+    "_id": "Yv4ZaMyZO",
+    "files": [
+      {
+        "name": "root",
+        "content": "",
+        "children": [
+          "662c6f8e429becabfee59c3c",
+          "662c6f8e429becabfee59c3d",
+          "662c6f8e429becabfee59c3e",
+          "662c6f8e429becabfee59c3f"
+        ],
+        "fileType": "folder",
+        "_id": "662c6f8e429becabfee59c3b",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T03:51:27.384Z",
+        "updatedAt": "2024-04-27T03:51:27.384Z",
+        "id": "662c6f8e429becabfee59c3b"
+      },
+      {
+        "name": "sketch.js",
+        "content": "let video;\nlet handpose;\nlet predictions = [];\nlet zoom = 1; // Initial zoom level for the visualization\nlet f = 0; // Frame counter for the Moebius strip animation\nlet currentVisual = \"moebius\"; // Initial visual type\n\nfunction setup() {\n    createCanvas(windowWidth, windowHeight, WEBGL);\n    noStroke();\n\n    // Setup video capture and ml5.js Handpose model\n    video = createCapture(VIDEO);\n    video.size(320, 240);\n    video.hide();  // Hide the HTML element and draw it in p5.js\n    handpose = ml5.handpose(video, () => console.log('Handpose Model Loaded'));\n    handpose.on('predict', results => predictions = results);\n\n    // Initialize instructions and button from existing HTML\n    initInstructions();\n\n    // Initialize full-screen button\n    const fullScreenButton = document.getElementById('fullScreenButton');\n    fullScreenButton.addEventListener('click', toggleFullScreen);\n}\n\nfunction toggleFullScreen() {\n    const canvasElement = document.querySelector('canvas');\n    if (!document.fullscreenElement) {\n        canvasElement.requestFullscreen().catch(err => {\n            console.error(`Error attempting to enable full-screen mode: ${err.message}`);\n        });\n    } else {\n        document.exitFullscreen();\n    }\n}\n\n\nfunction draw() {\n    background(0);\n    detectGestures();  // Update zoom and visual based on hand gestures\n\n    // Set the translation for zooming\n    translate(0, 0, (zoom - 1) * -1000);  // Zoom effect by translating the camera\n\n    // Lighting setup\n    setupLights();\n\n    // Draw the appropriate visual based on currentVisual\n    if (currentVisual === \"moebius\") {\n        drawMoebiusStrip();\n    } else if (currentVisual === \"newVisual\") {\n        drawNewVisual();\n    }\n}\n\nfunction windowResized() {\n    resizeCanvas(windowWidth, windowHeight);\n}\n\nfunction setupLights() {\n    [2, -2, 1].map(i => spotLight(255, 255, 255, 0, -400 * i, 400 * i, 0, i, -i));\n}\n\nfunction drawMoebiusStrip() {\n    // Large sphere as the backdrop\n    push();\n    scale(1, 0.5, 1);\n    translate(0, -1700);\n    fill(100);\n    sphere(2000, 33);\n    pop();\n\n    // Moebius strip animation\n    rotate(PI / 2);\n    rotateY(f / 150);\n    fill(255);\n    let max = 400;\n    for (let i = 0; i < max; i++) {\n        let I = i * (PI * 2 / max);\n        push();\n        rotateX(I + f / 50);\n        rotate(I);\n        translate(sin(I) * 80, cos(I) * 120);\n        cylinder(3, 50);\n        if (f % max == i) {\n            translate(30, 0);\n            fill('#D3002C');\n            sphere(28);\n        }\n        pop();\n    }\n    f++;\n}\n\nfunction drawNewVisual() {\n    rotateY(f * 0.01);\n    let w = 100, d = 20;\n    for (let z = -w; z <= w; z += d) {\n        for (let y = -w; y <= w; y += d) {\n            for (let x = -w; x <= w; x += d) {\n                push();\n                translate(x, y, z);\n                sphere((sin(x / w + y / w + z / w + f * 3) / w) * 20);\n                pop();\n            }\n        }\n    }\n    f++;\n}\n\nfunction detectGestures() {\n    if (predictions.length > 0) {\n        const indexTip = predictions[0].landmarks[8]; // Index finger tip\n        const middleTip = predictions[0].landmarks[12]; // Middle finger tip\n\n        // Log for debugging - check in the browser console\n        console.log(\"Index Y:\", indexTip[1], \"Middle Y:\", middleTip[1]);\n\n        // Assuming you want the index finger significantly higher than the middle finger\n        if (indexTip[1] < middleTip[1] - 50) {  // You might need to adjust this threshold\n            currentVisual = \"newVisual\";\n        } else {\n            currentVisual = \"moebius\";\n        }\n\n        // Map the distance so that a larger distance results in a larger zoom\n        let distance = dist(indexTip[0], indexTip[1], middleTip[0], middleTip[1]);\n        zoom = map(distance, 20, 200, 1, 2); // Zoom in when distance increases\n        zoom = constrain(zoom, 1, 2); // Limit the zoom level between 1 (min) and 2 (max)\n    }\n}\n\n\nfunction initInstructions() {\n    const instructionButton = document.getElementById('instructionButton');\n    const instructions = document.getElementById('instructions');\n\n    // Toggle instructions when the button is clicked\n    instructionButton.addEventListener('click', () => {\n        toggleInstructions(); // Call a function to toggle instructions\n    });\n\n    // Hide instructions when the instructions div is clicked\n    instructions.addEventListener('click', () => {\n        if (instructions.style.display === 'block') {\n            instructions.style.display = 'none';  // Hide instructions\n            instructionButton.textContent = 'Instructions';\n        }\n    });\n}\n\nfunction toggleInstructions() {\n    // This function toggles the visibility of the instructions\n    const instructions = document.getElementById('instructions');\n    const instructionButton = document.getElementById('instructionButton');\n    if (instructions.style.display === 'block') {\n        instructions.style.display = 'none'; // Hide instructions\n        instructionButton.textContent = 'Instructions';\n    } else {\n        instructions.style.display = 'block'; // Show instructions\n        instructionButton.textContent = 'Hide Instructions';\n    }\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c6f8e429becabfee59c3e",
+        "isSelectedFile": true,
+        "createdAt": "2024-04-27T03:51:27.384Z",
+        "updatedAt": "2024-04-27T03:51:27.384Z",
+        "id": "662c6f8e429becabfee59c3e"
+      },
+      {
+        "name": "index.html",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>P5.js Sketch</title>\n    <style>\n        body {\n            margin: 0;\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            height: 100vh;\n            background-color: #f0f0f0;\n        }\n\n        canvas {\n            display: block;\n        }\n    </style>\n</head>\n<body>\n    <button id=\"fullScreenButton\">Full Screen</button>\n    <div id=\"sketch-container\">\n        <!-- Your canvas will be loaded here -->\n    </div>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js\"></script>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/ml5/0.7.2/ml5.min.js\"></script>\n    <script src=\"sketch.js\"></script>\n</body>\n</html>\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c6f8e429becabfee59c3c",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T03:51:27.384Z",
+        "updatedAt": "2024-04-27T03:51:27.384Z",
+        "id": "662c6f8e429becabfee59c3c"
+      },
+      {
+        "name": "style.css",
+        "content": "body, html {\n    margin: 0;\n    padding: 0;\n    font-family: sans-serif;\n    text-align: center;\n    background-color: #fff;\n}\n\ncanvas {\n    display: block;\n    margin: auto;\n}\n\nbutton {\n    background-color: rgb(220, 220, 220);\n    width: 100px;\n    height: 50px;\n    border-radius: 10px;\n    margin: 10px;\n    font-size: 2em;\n    cursor: pointer;\n}\n\n#instructions {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: none;\n    width: 400px;\n    padding: 20px;\n    background-color: rgba(255, 255, 255, 0.9);\n    border-radius: 5px;\n    cursor: pointer;\n}\n\n#instructionButton {\n    width: 100px;\n    font-size: 1em;\n    height: 40px;\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c6f8e429becabfee59c3f",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T03:51:27.384Z",
+        "updatedAt": "2024-04-27T03:51:27.384Z",
+        "id": "662c6f8e429becabfee59c3f"
+      },
+      {
+        "name": "instructions.js",
+        "content": "",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c6f8e429becabfee59c3d",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T03:51:27.384Z",
+        "updatedAt": "2024-04-27T03:51:27.384Z",
+        "id": "662c6f8e429becabfee59c3d"
+      }
+    ],
+    "createdAt": "2024-04-27T03:22:55.024Z",
+    "updatedAt": "2024-04-27T03:51:27.384Z",
+    "id": "Yv4ZaMyZO"
+  },
+  {
+    "name": "Push and Draw copy copy",
+    "_id": "_ymznQLgB",
+    "files": [
+      {
+        "name": "root",
+        "content": "",
+        "children": [
+          "662c786139ac6fc87c11d7ac",
+          "662c786139ac6fc87c11d7ad",
+          "662c786139ac6fc87c11d7ae",
+          "662c786139ac6fc87c11d7af"
+        ],
+        "fileType": "folder",
+        "_id": "662c786139ac6fc87c11d7ab",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T04:12:26.490Z",
+        "updatedAt": "2024-04-27T04:12:26.490Z",
+        "id": "662c786139ac6fc87c11d7ab"
+      },
+      {
+        "name": "sketch.js",
+        "content": "let video;\nlet handpose;\nlet predictions = [];\nlet zoom = 1; // Initial zoom level for the visualization\nlet f = 0; // Frame counter for the Moebius strip animation\nlet currentVisual = \"moebius\"; // Initial visual type\n\nfunction setup() {\n    createCanvas(windowWidth, windowHeight, WEBGL);\n    noStroke();\n\n    // Setup video capture and ml5.js Handpose model\n    video = createCapture(VIDEO);\n    video.size(320, 240);\n    video.hide();  // Hide the HTML element and draw it in p5.js\n    handpose = ml5.handpose(video, () => console.log('Handpose Model Loaded'));\n    handpose.on('predict', results => predictions = results);\n\n    // Initialize instructions and button from existing HTML\n    initInstructions();\n\n    // Initialize full-screen button\n    const fullScreenButton = document.getElementById('fullScreenButton');\n    fullScreenButton.addEventListener('click', toggleFullScreen);\n\n    // Set the default visual\n    currentVisual = \"moebius\";\n}\n\nfunction draw() {\n    background(0);\n    detectGestures();  // Update zoom and visual based on hand gestures\n\n    // Set the translation for zooming\n    translate(0, 0, (zoom - 1) * -1000);  // Zoom effect by translating the camera\n\n    // Lighting setup\n    setupLights();\n\n    // Draw the appropriate visual based on currentVisual\n    if (currentVisual === \"moebius\") {\n        drawMoebiusStrip();\n    } else if (currentVisual === \"newVisual\") {\n        drawNewVisual();\n    }\n}\n\nfunction windowResized() {\n    resizeCanvas(windowWidth, windowHeight);\n}\n\nfunction setupLights() {\n    [2, -2, 1].map(i => spotLight(255, 255, 255, 0, -400 * i, 400 * i, 0, i, -i));\n}\n\nfunction drawMoebiusStrip() {\n    // Large sphere as the backdrop\n    push();\n    scale(1, 0.5, 1);\n    translate(0, -1700);\n    fill(100);\n    sphere(2000, 33);\n    pop();\n\n    // Moebius strip animation\n    rotate(PI / 2);\n    rotateY(f / 150);\n    fill(255);\n    let max = 400;\n    for (let i = 0; i < max; i++) {\n        let I = i * (PI * 2 / max);\n        push();\n        rotateX(I + f / 50);\n        rotate(I);\n        translate(sin(I) * 80, cos(I) * 120);\n        cylinder(3, 50);\n        if (f % max == i) {\n            translate(30, 0);\n            fill('#D3002C');\n            sphere(28);\n        }\n        pop();\n    }\n    f++;\n}\n\nfunction drawNewVisual() {\n    // Set the background color to match the default background color\n    background(0);\n\n    // Set the fill color to white\n    fill(255);\n\n    // Your visual drawing code goes here\n    orbitControl(2, 2, 2);\n    rotateY(frameCount * 0.02);\n    rotateX(frameCount * 0.008);\n    rotateZ(frameCount * 0.006);\n\n    ambientLight(0, 10, 0);\n    specularMaterial(255, 255, 255);\n\n    frustum(width / 3, -width / 3, height / 3, -height / 3, -500, 10);\n    lightFalloff(1.3, 0.00000000001, 0.0000001);\n    pointLight(100, 255, 10, 0, 1000, 0);\n    pointLight(0, 77, 125, 0, -1000, 0);\n\n    // Draw objects in white directly\n    normalMaterial();\n    rotateX(-QUARTER_PI);\n    rotateY(-QUARTER_PI);\n    box(100);\n    rotateX(-QUARTER_PI);\n    torus(100, 8, 164, 4);\n}\n\n\n\nfunction detectGestures() {\n    if (predictions.length > 0) {\n        const indexTip = predictions[0].landmarks[8]; // Index finger tip\n        const middleTip = predictions[0].landmarks[12]; // Middle finger tip\n\n        // Log for debugging - check in the browser console\n        console.log(\"Index Y:\", indexTip[1], \"Middle Y:\", middleTip[1]);\n\n        // Assuming you want the index finger significantly higher than the middle finger\n        if (indexTip[1] < middleTip[1] - 50) {  // You might need to adjust this threshold\n            currentVisual = \"newVisual\";\n        } else {\n            currentVisual = \"moebius\";\n        }\n\n        // Map the distance so that a larger distance results in a larger zoom\n        let distance = dist(indexTip[0], indexTip[1], middleTip[0], middleTip[1]);\n        zoom = map(distance, 20, 200, 1, 2); // Zoom in when distance increases\n        zoom = constrain(zoom, 1, 2); // Limit the zoom level between 1 (min) and 2 (max)\n    }\n}\n\n\nfunction initInstructions() {\n    const instructionButton = document.getElementById('instructionButton');\n    const instructions = document.getElementById('instructions');\n\n    // Toggle instructions when the button is clicked\n    instructionButton.addEventListener('click', () => {\n        toggleInstructions(); // Call a function to toggle instructions\n    });\n\n    // Hide instructions when the instructions div is clicked\n    instructions.addEventListener('click', () => {\n        if (instructions.style.display === 'block') {\n            instructions.style.display = 'none';  // Hide instructions\n            instructionButton.textContent = 'Instructions';\n        }\n    });\n}\n\nfunction toggleInstructions() {\n    // This function toggles the visibility of the instructions\n    const instructions = document.getElementById('instructions');\n    const instructionButton = document.getElementById('instructionButton');\n    if (instructions.style.display === 'block') {\n        instructions.style.display = 'none'; // Hide instructions\n        instructionButton.textContent = 'Instructions';\n    } else {\n        instructions.style.display = 'block'; // Show instructions\n        instructionButton.textContent = 'Hide Instructions';\n    }\n}\n\nfunction toggleFullScreen() {\n    const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement ||\n        document.mozFullScreenElement || document.msFullscreenElement;\n\n    if (!fullscreenElement) {\n        if (document.documentElement.requestFullscreen) {\n            document.documentElement.requestFullscreen();\n        } else if (document.documentElement.webkitRequestFullscreen) {\n            document.documentElement.webkitRequestFullscreen();\n        } else if (document.documentElement.mozRequestFullScreen) {\n            document.documentElement.mozRequestFullScreen();\n        } else if (document.documentElement.msRequestFullscreen) {\n            document.documentElement.msRequestFullscreen();\n        }\n    } else {\n        if (document.exitFullscreen) {\n            document.exitFullscreen();\n        } else if (document.webkitExitFullscreen) {\n            document.webkitExitFullscreen();\n        } else if (document.mozCancelFullScreen) {\n            document.mozCancelFullScreen();\n        } else if (document.msExitFullscreen) {\n            document.msExitFullscreen();\n        }\n    }\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c786139ac6fc87c11d7ae",
+        "isSelectedFile": true,
+        "createdAt": "2024-04-27T04:12:26.490Z",
+        "updatedAt": "2024-04-27T04:12:26.490Z",
+        "id": "662c786139ac6fc87c11d7ae"
+      },
+      {
+        "name": "index.html",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js\"></script>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/addons/p5.sound.min.js\"></script>\n    <script src=\"https://unpkg.com/ml5@latest/dist/ml5.min.js\"></script>\n    <script src=\"sketch.js\"></script>\n    <link rel=\"stylesheet\" href=\"style.css\">\n    <title>Gesture Controlled Visuals</title>\n</head>\n<body>\n    <h1>Gesture Controlled Visuals</h1>\n    <p>Use your hand gestures to control the visuals!</p>\n    <button id=\"instructionButton\">Instructions</button>\n    <button id=\"fullScreenButton\">Full Screen</button>\n\n    <div id=\"instructions\">\n        <h2>Instructions</h2>\n        <ol>\n            <li>Position your hand to see different effects on the screen:</li>\n            <li><strong>Paper</strong> (hand open) to push away the visuals.</li>\n            <li><strong>Rock</strong> (fist) to draw back the visuals.</li>\n        </ol>\n        <p style=\"text-decoration: underline;\"><strong>Hide instructions</strong></p>\n    </div>\n    <script src=\"instructions.js\"></script>\n</body>\n</html>\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c786139ac6fc87c11d7ac",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T04:12:26.490Z",
+        "updatedAt": "2024-04-27T04:12:26.490Z",
+        "id": "662c786139ac6fc87c11d7ac"
+      },
+      {
+        "name": "style.css",
+        "content": "body, html {\n    margin: 0;\n    padding: 0;\n    font-family: sans-serif;\n    text-align: center;\n    background-color: #fff;\n}\n\ncanvas {\n    display: block;\n    margin: auto;\n}\n\nbutton {\n    background-color: rgb(220, 220, 220);\n    width: 100px;\n    height: 50px;\n    border-radius: 10px;\n    margin: 10px;\n    font-size: 2em;\n    cursor: pointer;\n}\n\n#instructions {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: none;\n    width: 400px;\n    padding: 20px;\n    background-color: rgba(255, 255, 255, 0.9);\n    border-radius: 5px;\n    cursor: pointer;\n}\n\n#instructionButton {\n    width: 100px;\n    font-size: 1em;\n    height: 40px;\n}\n\n#fullScreenButton {\n    width: 100px;\n    font-size: 1em;\n    height: 40px;\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c786139ac6fc87c11d7af",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T04:12:26.490Z",
+        "updatedAt": "2024-04-27T04:12:26.490Z",
+        "id": "662c786139ac6fc87c11d7af"
+      },
+      {
+        "name": "instructions.js",
+        "content": "",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c786139ac6fc87c11d7ad",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T04:12:26.490Z",
+        "updatedAt": "2024-04-27T04:12:26.490Z",
+        "id": "662c786139ac6fc87c11d7ad"
+      }
+    ],
+    "createdAt": "2024-04-27T04:00:33.712Z",
+    "updatedAt": "2024-04-27T04:12:26.490Z",
+    "id": "_ymznQLgB"
+  },
+  {
+    "name": "Push and Draw copy copy copy/works",
+    "_id": "7No-vxrsY",
+    "files": [
+      {
+        "name": "root",
+        "content": "",
+        "children": [
+          "662c7b2c39ac6fc87c11d7b1",
+          "662c7b2c39ac6fc87c11d7b2",
+          "662c7b2c39ac6fc87c11d7b3",
+          "662c7b2c39ac6fc87c11d7b4"
+        ],
+        "fileType": "folder",
+        "_id": "662c7b2c39ac6fc87c11d7b0",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T15:30:54.610Z",
+        "updatedAt": "2024-04-27T15:30:54.610Z",
+        "id": "662c7b2c39ac6fc87c11d7b0"
+      },
+      {
+        "name": "sketch.js",
+        "content": "let video;\nlet handpose;\nlet predictions = [];\nlet zoom = 1; // Initial zoom level for the visualization\nlet f = 0; // Frame counter for the Moebius strip animation\nlet currentVisual = \"moebius\"; // Initial visual type\nlet newVisualDrawn = false; // Track if the new visual has been drawn\nlet scissorGestureDetected = false; // Track if the scissor gesture has been detected\nlet currentZoomTranslation = 0; // Initial zoom translation\n\nfunction setup() {\n    createCanvas(windowWidth, windowHeight, WEBGL);\n    noStroke();\n\n    // Setup video capture and ml5.js Handpose model\n    video = createCapture(VIDEO);\n    video.size(320, 240);\n    video.hide();  // Hide the HTML element and draw it in p5.js\n    handpose = ml5.handpose(video, () => console.log('Handpose Model Loaded'));\n    handpose.on('predict', results => predictions = results);\n\n    // Initialize instructions and button from existing HTML\n    initInstructions();\n\n    // Initialize full-screen button\n    const fullScreenButton = document.getElementById('fullScreenButton');\n    fullScreenButton.addEventListener('click', toggleFullScreen);\n}\n\n\nfunction draw() {\n    background(0);\n\n    // Lighting setup should not change between frames unless intended\n    setupLights();\n\n    // Set the translation for zooming and apply a smooth transition\n    let targetZoomTranslation = (zoom - 1) * -1000;\n    let currentZoomTranslation = lerp(translateZ, targetZoomTranslation, 0.1); // Smooth transition using linear interpolation\n    translate(0, 0, currentZoomTranslation);\n\n    // Check which visual to draw and ensure it's reset correctly\n    if (currentVisual === \"moebius\") {\n        if (newVisualDrawn) {\n            // Reset conditions if coming from a different visual\n            resetNewVisualConditions();\n        }\n        drawMoebiusStrip();\n    } else if (currentVisual === \"newVisual\") {\n        if (!newVisualDrawn) {\n            // Initialize conditions for new visual\n            initNewVisualConditions();\n        }\n        drawNewVisual();\n    }\n}\n\nfunction resetNewVisualConditions() {\n    newVisualDrawn = false;\n    // Reset any specific settings needed for the Moebius strip\n}\n\nfunction initNewVisualConditions() {\n    newVisualDrawn = true;\n    // Set any initial conditions or settings specific to the new visual\n}\n\n\nfunction windowResized() {\n    resizeCanvas(windowWidth, windowHeight);\n}\n\nfunction setupLights() {\n    [2, -2, 1].map(i => spotLight(255, 255, 255, 0, -400 * i, 400 * i, 0, i, -i));\n}\n\nfunction drawMoebiusStrip() {\n    // Large sphere as the backdrop\n    push();\n    scale(1, 0.5, 1);\n    translate(0, -1700);\n    fill(100);\n    sphere(2000, 33);\n    pop();\n\n    // Moebius strip animation\n    rotate(PI / 2);\n    rotateY(f / 150);\n    fill(255);\n    let max = 400;\n    for (let i = 0; i < max; i++) {\n        let I = i * (PI * 2 / max);\n        push();\n        rotateX(I + f / 50);\n        rotate(I);\n        translate(sin(I) * 80, cos(I) * 120);\n        cylinder(3, 50);\n        if (f % max == i) {\n            translate(30, 0);\n            fill('#D3002C');\n            sphere(28);\n        }\n        pop();\n    }\n    f++;\n}\n\nfunction drawNewVisual() {\n    // Set the background color to match the default background color\n    background(0);\n\n    // Set the fill color to white\n    fill(255);\n\n    // Your visual drawing code goes here\n    orbitControl(2, 2, 2);\n    rotateY(frameCount * 0.02);\n    rotateX(frameCount * 0.008);\n    rotateZ(frameCount * 0.006);\n\n    ambientLight(0, 10, 0);\n    specularMaterial(255, 255, 255);\n\n    frustum(width / 3, -width / 3, height / 3, -height / 3, -500, 10);\n    lightFalloff(1.3, 0.00000000001, 0.0000001);\n    pointLight(100, 255, 10, 0, 1000, 0);\n    pointLight(0, 77, 125, 0, -1000, 0);\n\n    // Draw objects in white directly\n    normalMaterial();\n    rotateX(-QUARTER_PI);\n    rotateY(-QUARTER_PI);\n    box(100);\n    rotateX(-QUARTER_PI);\n    torus(100, 8, 164, 4);\n}\n\n\n\nfunction detectGestures() {\n    if (predictions.length > 0) {\n        const indexTip = predictions[0].landmarks[8]; // Index finger tip\n        const middleTip = predictions[0].landmarks[12]; // Middle finger tip\n        const thumbTip = predictions[0].landmarks[4]; // Thumb tip\n\n        // Log for debugging - check in the browser console\n        console.log(\"Index Y:\", indexTip[1], \"Middle Y:\", middleTip[1], \"Thumb Y:\", thumbTip[1]);\n\n        // Assuming you want the scissor gesture to be thumb significantly lower than the other fingers\n        if (thumbTip[1] < indexTip[1] && thumbTip[1] < middleTip[1]) {  \n            scissorGestureDetected = true;\n        } else {\n            scissorGestureDetected = false;\n        }\n\n        // Change visual based on gesture\n        if (scissorGestureDetected) {\n            currentVisual = \"newVisual\";\n            newVisualDrawn = true; // Set newVisualDrawn to true once the new visual is drawn\n        } else {\n            currentVisual = \"moebius\";\n            newVisualDrawn = false; // Reset newVisualDrawn when switching back to the Moebius visual\n        }\n\n        // Map the distance so that a larger distance results in a larger zoom\n        let distance = dist(indexTip[0], indexTip[1], middleTip[0], middleTip[1]);\n        zoom = map(distance, 20, 200, 1, 1.5); // Zoom in when distance increases\n        zoom = constrain(zoom, 1, 1.5); // Limit the zoom level between 1 (min) and 2 (max)\n    }\n}\n\n\nfunction initInstructions() {\n    const instructionButton = document.getElementById('instructionButton');\n    const instructions = document.getElementById('instructions');\n\n    // Toggle instructions when the button is clicked\n    instructionButton.addEventListener('click', () => {\n        toggleInstructions(); // Call a function to toggle instructions\n    });\n\n    // Hide instructions when the instructions div is clicked\n    instructions.addEventListener('click', () => {\n        if (instructions.style.display === 'block') {\n            instructions.style.display = 'none';  // Hide instructions\n            instructionButton.textContent = 'Instructions';\n        }\n    });\n}\n\nfunction toggleInstructions() {\n    // This function toggles the visibility of the instructions\n    const instructions = document.getElementById('instructions');\n    const instructionButton = document.getElementById('instructionButton');\n    if (instructions.style.display === 'block') {\n        instructions.style.display = 'none'; // Hide instructions\n        instructionButton.textContent = 'Instructions';\n    } else {\n        instructions.style.display = 'block'; // Show instructions\n        instructionButton.textContent = 'Hide Instructions';\n    }\n}\n\nfunction toggleFullScreen() {\n    const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement ||\n        document.mozFullScreenElement || document.msFullscreenElement;\n\n    if (!fullscreenElement) {\n        if (document.documentElement.requestFullscreen) {\n            document.documentElement.requestFullscreen();\n        } else if (document.documentElement.webkitRequestFullscreen) {\n            document.documentElement.webkitRequestFullscreen();\n        } else if (document.documentElement.mozRequestFullScreen) {\n            document.documentElement.mozRequestFullScreen();\n        } else if (document.documentElement.msRequestFullscreen) {\n            document.documentElement.msRequestFullscreen();\n        }\n    } else {\n        if (document.exitFullscreen) {\n            document.exitFullscreen();\n        } else if (document.webkitExitFullscreen) {\n            document.webkitExitFullscreen();\n        } else if (document.mozCancelFullScreen) {\n            document.mozCancelFullScreen();\n        } else if (document.msExitFullscreen) {\n            document.msExitFullscreen();\n        }\n    }\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c7b2c39ac6fc87c11d7b3",
+        "isSelectedFile": true,
+        "createdAt": "2024-04-27T15:30:54.610Z",
+        "updatedAt": "2024-04-27T15:30:54.610Z",
+        "id": "662c7b2c39ac6fc87c11d7b3"
+      },
+      {
+        "name": "index.html",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js\"></script>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/addons/p5.sound.min.js\"></script>\n    <script src=\"https://unpkg.com/ml5@latest/dist/ml5.min.js\"></script>\n    <script src=\"sketch.js\"></script>\n    <link rel=\"stylesheet\" href=\"style.css\">\n    <title>Gesture Controlled Visuals</title>\n</head>\n<body>\n    <h1>Gesture Controlled Visuals</h1>\n    <p>Use your hand gestures to control the visuals!</p>\n    <button id=\"instructionButton\">Instructions</button>\n    <button id=\"fullScreenButton\">Full Screen</button>\n\n    <div id=\"instructions\">\n        <h2>Instructions</h2>\n        <ol>\n            <li>Position your hand to see different effects on the screen:</li>\n            <li><strong>Paper</strong> (hand open) to push away the visuals.</li>\n            <li><strong>Rock</strong> (fist) to draw back the visuals.</li>\n        </ol>\n        <p style=\"text-decoration: underline;\"><strong>Hide instructions</strong></p>\n    </div>\n    <script src=\"instructions.js\"></script>\n</body>\n</html>\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c7b2c39ac6fc87c11d7b1",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T15:30:54.610Z",
+        "updatedAt": "2024-04-27T15:30:54.610Z",
+        "id": "662c7b2c39ac6fc87c11d7b1"
+      },
+      {
+        "name": "style.css",
+        "content": "body, html {\n    margin: 0;\n    padding: 0;\n    font-family: sans-serif;\n    text-align: center;\n    background-color: #fff;\n}\n\ncanvas {\n    display: block;\n    margin: auto;\n}\n\nbutton {\n    background-color: rgb(220, 220, 220);\n    width: 100px;\n    height: 50px;\n    border-radius: 10px;\n    margin: 10px;\n    font-size: 2em;\n    cursor: pointer;\n}\n\n#instructions {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: none;\n    width: 400px;\n    padding: 20px;\n    background-color: rgba(255, 255, 255, 0.9);\n    border-radius: 5px;\n    cursor: pointer;\n}\n\n#instructionButton {\n    width: 100px;\n    font-size: 1em;\n    height: 40px;\n}\n\n#fullScreenButton {\n    width: 100px;\n    font-size: 1em;\n    height: 40px;\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c7b2c39ac6fc87c11d7b4",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T15:30:54.610Z",
+        "updatedAt": "2024-04-27T15:30:54.610Z",
+        "id": "662c7b2c39ac6fc87c11d7b4"
+      },
+      {
+        "name": "instructions.js",
+        "content": "",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c7b2c39ac6fc87c11d7b2",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T15:30:54.610Z",
+        "updatedAt": "2024-04-27T15:30:54.610Z",
+        "id": "662c7b2c39ac6fc87c11d7b2"
+      }
+    ],
+    "createdAt": "2024-04-27T04:12:28.047Z",
+    "updatedAt": "2024-04-27T15:30:54.610Z",
+    "id": "7No-vxrsY"
+  },
+  {
+    "name": "Push and Draw copy copy copy/works copy",
+    "_id": "ZnlZtj9cO",
+    "files": [
+      {
+        "name": "root",
+        "content": "",
+        "children": [
+          "662d1a2f26967c858ff3c0cb",
+          "662d1a2f26967c858ff3c0cc",
+          "662d1a2f26967c858ff3c0cd",
+          "662d1a2f26967c858ff3c0ce"
+        ],
+        "fileType": "folder",
+        "_id": "662d1a2f26967c858ff3c0ca",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T16:14:49.562Z",
+        "updatedAt": "2024-04-27T16:14:49.562Z",
+        "id": "662d1a2f26967c858ff3c0ca"
+      },
+      {
+        "name": "sketch.js",
+        "content": "let video;\nlet handpose;\nlet predictions = [];\nlet zoom = 1; // Initial zoom level for the visualization\nlet f = 0; // Frame counter for the Moebius strip animation\nlet currentVisual = \"moebius\"; // Initial visual type\nlet newVisualDrawn = false; // Track if the new visual has been drawn\nlet scissorGestureDetected = false; // Track if the scissor gesture has been detected\nlet currentZoomTranslation = 0; // Initial zoom translation\n\nfunction setup() {\n    createCanvas(windowWidth, windowHeight, WEBGL);\n    noStroke();\n\n    // Setup video capture and ml5.js Handpose model\n    video = createCapture(VIDEO);\n    video.size(320, 240);\n    video.hide();  // Hide the HTML element and draw it in p5.js\n    handpose = ml5.handpose(video, () => console.log('Handpose Model Loaded'));\n    handpose.on('predict', results => predictions = results);\n\n    // Initialize instructions and button from existing HTML\n    initInstructions();\n\n    // Initialize full-screen button\n    const fullScreenButton = document.getElementById('fullScreenButton');\n    fullScreenButton.addEventListener('click', toggleFullScreen);\n}\n\n\nfunction draw() {\n    background(0);\n    detectGestures();  // Update zoom and visual based on hand gestures\n\n    // Apply zoom by directly calculating the translation\n    translate(0, 0, (zoom - 1) * -1000);  // Zoom effect by translating the camera\n\n    setupLights();  // Set up the lighting\n\n    // Draw the appropriate visual based on currentVisual\n    if (currentVisual === \"moebius\") {\n        drawMoebiusStrip();\n    } else if (currentVisual === \"newVisual\") {\n        drawNewVisual();\n    }\n}\nfunction resetNewVisualConditions() {\n    newVisualDrawn = false;\n    // Additional reset operations can be added here if needed\n}\n\nfunction initNewVisualConditions() {\n    newVisualDrawn = true;\n    // Initialize settings or conditions for the new visual here\n}\n\nfunction windowResized() {\n    resizeCanvas(windowWidth, windowHeight);\n}\n\nfunction setupLights() {\n    [2, -2, 1].map(i => spotLight(255, 255, 255, 0, -400 * i, 400 * i, 0, i, -i));\n}\n\nfunction drawMoebiusStrip() {\n    // Large sphere as the backdrop\n    push();\n    scale(1, 0.5, 1);\n    translate(0, -1700);\n    fill(100);\n    sphere(2000, 33);\n    pop();\n\n    // Moebius strip animation\n    rotate(PI / 2);\n    rotateY(f / 150);\n    fill(255);\n    let max = 400;\n    for (let i = 0; i < max; i++) {\n        let I = i * (PI * 2 / max);\n        push();\n        rotateX(I + f / 50);\n        rotate(I);\n        translate(sin(I) * 80, cos(I) * 120);\n        cylinder(3, 50);\n        if (f % max == i) {\n            translate(30, 0);\n            fill('#D3002C');\n            sphere(28);\n        }\n        pop();\n    }\n    f++;\n}\n\nfunction drawNewVisual() {\n    background(0);\n\n    // Set a more subtle scaling factor\n    push();\n    scale(3);  // Adjust this scaling factor to better fit your visual context\n\n    // Lighting and camera controls to match the visual consistency\n    orbitControl(2, 2, 2);\n    rotateY(frameCount * 0.02);\n    rotateX(frameCount * 0.008);\n    rotateZ(frameCount * 0.006);\n\n    // Set lighting to unify the look with the Moebius strip\n    ambientLight(0, 10, 0);\n    specularMaterial(255, 255, 255);\n    pointLight(100, 255, 10, 0, 1000, 0);\n    pointLight(0, 77, 125, 0, -1000, 0);\n\n    // Draw objects with adjusted sizes\n    normalMaterial();\n    rotateX(-QUARTER_PI);\n    rotateY(-QUARTER_PI);\n    box(50);  // Smaller box\n    rotateX(-QUARTER_PI);\n    torus(50, 10, 164, 4);  // Smaller torus\n\n    pop();\n}\n\n\nfunction detectGestures() {\n    if (predictions.length > 0) {\n        const indexTip = predictions[0].landmarks[8];  // Index finger tip\n        const middleTip = predictions[0].landmarks[12];  // Middle finger tip\n        const thumbTip = predictions[0].landmarks[4];  // Thumb tip\n\n        // Log for debugging - check in the browser console\n        console.log(\"Index Y:\", indexTip[1], \"Middle Y:\", middleTip[1], \"Thumb Y:\", thumbTip[1]);\n\n        // Detect scissor gesture: thumb significantly lower than the other fingers\n        if (thumbTip[1] < indexTip[1] && thumbTip[1] < middleTip[1]) {\n            scissorGestureDetected = true;\n        } else {\n            scissorGestureDetected = false;\n        }\n\n        // Change visual based on gesture only if it has not already been drawn\n        if (scissorGestureDetected && !newVisualDrawn) {\n            currentVisual = \"newVisual\";\n            newVisualDrawn = true;  // Lock the new visual once it is drawn\n        }\n\n        // You can add a condition to switch back to the default visual here\n        // Example: if a palm open gesture is detected and the new visual is currently drawn\n        // if (palmOpenDetected && newVisualDrawn) {\n        //     currentVisual = \"moebius\";\n        //     newVisualDrawn = false;\n        // }\n\n        // Map the distance for zoom functionality\n        let distance = dist(indexTip[0], indexTip[1], middleTip[0], middleTip[1]);\n        zoom = map(distance, 20, 200, 1, 1.5); // Zoom in when distance increases\n        zoom = constrain(zoom, 1, 1.5); // Limit the zoom level between 1 (min) and 1.5 (max)\n    } else {\n        // If no hands are detected, potentially reset to default visual or maintain current state\n        // depending on your application needs\n    }\n}\n\n\nfunction initInstructions() {\n    const instructionButton = document.getElementById('instructionButton');\n    const instructions = document.getElementById('instructions');\n\n    // Toggle instructions when the button is clicked\n    instructionButton.addEventListener('click', () => {\n        toggleInstructions(); // Call a function to toggle instructions\n    });\n\n    // Hide instructions when the instructions div is clicked\n    instructions.addEventListener('click', () => {\n        if (instructions.style.display === 'block') {\n            instructions.style.display = 'none';  // Hide instructions\n            instructionButton.textContent = 'Instructions';\n        }\n    });\n}\n\nfunction toggleInstructions() {\n    // This function toggles the visibility of the instructions\n    const instructions = document.getElementById('instructions');\n    const instructionButton = document.getElementById('instructionButton');\n    if (instructions.style.display === 'block') {\n        instructions.style.display = 'none'; // Hide instructions\n        instructionButton.textContent = 'Instructions';\n    } else {\n        instructions.style.display = 'block'; // Show instructions\n        instructionButton.textContent = 'Hide Instructions';\n    }\n}\n\nfunction toggleFullScreen() {\n    const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement ||\n        document.mozFullScreenElement || document.msFullscreenElement;\n\n    if (!fullscreenElement) {\n        if (document.documentElement.requestFullscreen) {\n            document.documentElement.requestFullscreen();\n        } else if (document.documentElement.webkitRequestFullscreen) {\n            document.documentElement.webkitRequestFullscreen();\n        } else if (document.documentElement.mozRequestFullScreen) {\n            document.documentElement.mozRequestFullScreen();\n        } else if (document.documentElement.msRequestFullscreen) {\n            document.documentElement.msRequestFullscreen();\n        }\n    } else {\n        if (document.exitFullscreen) {\n            document.exitFullscreen();\n        } else if (document.webkitExitFullscreen) {\n            document.webkitExitFullscreen();\n        } else if (document.mozCancelFullScreen) {\n            document.mozCancelFullScreen();\n        } else if (document.msExitFullscreen) {\n            document.msExitFullscreen();\n        }\n    }\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662d1a2f26967c858ff3c0cd",
+        "isSelectedFile": true,
+        "createdAt": "2024-04-27T16:14:49.562Z",
+        "updatedAt": "2024-04-27T16:14:49.562Z",
+        "id": "662d1a2f26967c858ff3c0cd"
+      },
+      {
+        "name": "index.html",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js\"></script>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/addons/p5.sound.min.js\"></script>\n    <script src=\"https://unpkg.com/ml5@latest/dist/ml5.min.js\"></script>\n    <script src=\"sketch.js\"></script>\n    <link rel=\"stylesheet\" href=\"style.css\">\n    <title>Gesture Controlled Visuals</title>\n</head>\n<body>\n    <h1>Gesture Controlled Visuals</h1>\n    <p>Use your hand gestures to control the visuals!</p>\n    <button id=\"instructionButton\">Instructions</button>\n    <button id=\"fullScreenButton\">Full Screen</button>\n\n    <div id=\"instructions\">\n        <h2>Instructions</h2>\n        <ol>\n            <li>Position your hand to see different effects on the screen:</li>\n            <li><strong>Paper</strong> (hand open) to push away the visuals.</li>\n            <li><strong>Rock</strong> (fist) to draw back the visuals.</li>\n        </ol>\n        <p style=\"text-decoration: underline;\"><strong>Hide instructions</strong></p>\n    </div>\n    <script src=\"instructions.js\"></script>\n</body>\n</html>\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662d1a2f26967c858ff3c0cb",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T16:14:49.562Z",
+        "updatedAt": "2024-04-27T16:14:49.562Z",
+        "id": "662d1a2f26967c858ff3c0cb"
+      },
+      {
+        "name": "style.css",
+        "content": "body, html {\n    margin: 0;\n    padding: 0;\n    font-family: sans-serif;\n    text-align: center;\n    background-color: #fff;\n}\n\ncanvas {\n    display: block;\n    margin: auto;\n}\n\nbutton {\n    background-color: rgb(220, 220, 220);\n    width: 100px;\n    height: 50px;\n    border-radius: 10px;\n    margin: 10px;\n    font-size: 2em;\n    cursor: pointer;\n}\n\n#instructions {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: none;\n    width: 400px;\n    padding: 20px;\n    background-color: rgba(255, 255, 255, 0.9);\n    border-radius: 5px;\n    cursor: pointer;\n}\n\n#instructionButton {\n    width: 100px;\n    font-size: 1em;\n    height: 40px;\n}\n\n#fullScreenButton {\n    width: 100px;\n    font-size: 1em;\n    height: 40px;\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662d1a2f26967c858ff3c0ce",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T16:14:49.562Z",
+        "updatedAt": "2024-04-27T16:14:49.562Z",
+        "id": "662d1a2f26967c858ff3c0ce"
+      },
+      {
+        "name": "instructions.js",
+        "content": "",
+        "children": [],
+        "fileType": "file",
+        "_id": "662d1a2f26967c858ff3c0cc",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T16:14:49.562Z",
+        "updatedAt": "2024-04-27T16:14:49.562Z",
+        "id": "662d1a2f26967c858ff3c0cc"
+      }
+    ],
+    "createdAt": "2024-04-27T15:30:55.971Z",
+    "updatedAt": "2024-04-27T16:14:49.562Z",
+    "id": "ZnlZtj9cO"
+  },
+  {
+    "name": "Push and Draw copy copy copy/works copy copy",
+    "_id": "AACxYHsl_",
+    "files": [
+      {
+        "name": "root",
+        "content": "",
+        "children": [
+          "66300f7d9a3ae5041e2dc0d3",
+          "66300f7d9a3ae5041e2dc0d5",
+          "66300f7d9a3ae5041e2dc0d6"
+        ],
+        "fileType": "folder",
+        "_id": "66300f7d9a3ae5041e2dc0d2",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-29T21:31:23.979Z",
+        "updatedAt": "2024-04-29T21:31:23.979Z",
+        "id": "66300f7d9a3ae5041e2dc0d2"
+      },
+      {
+        "name": "sketch.js",
+        "content": "let video;\nlet handpose;\nlet predictions = [];\nlet zoom = 1; // Initial zoom level for the visualization\nlet f = 0; // Frame counter for the Moebius strip animation\nlet currentVisual = \"moebius\"; // Initial visual type\nlet newVisualDrawn = false; // Track if the new visual has been drawn\nlet scissorGestureDetected = false; // Track if the scissor gesture has been detected\nlet currentZoomTranslation = 0; // Initial zoom translation\n\nfunction setup() {\n    createCanvas(windowWidth, windowHeight, WEBGL);\n    noStroke();\n\n    // Setup video capture and ml5.js Handpose model\n    video = createCapture(VIDEO);\n    video.size(320, 240);\n    video.hide();  // Hide the HTML element and draw it in p5.js\n    handpose = ml5.handpose(video, () => console.log('Handpose Model Loaded'));\n    handpose.on('predict', results => predictions = results);\n\n    // Initialize instructions and button from existing HTML\n    initInstructions();\n\n    // Initialize full-screen button\n    const fullScreenButton = document.getElementById('fullScreenButton');\n    fullScreenButton.addEventListener('click', toggleFullScreen);\n}\n\n\nfunction draw() {\n    background(0);\n    detectGestures();  // Update zoom and visual based on hand gestures\n\n    // Apply zoom by directly calculating the translation\n    translate(0, 0, (zoom - 1) * -1000);  // Zoom effect by translating the camera\n\n    setupLights();  // Set up the lighting\n\n    // Draw the appropriate visual based on currentVisual\n    if (currentVisual === \"moebius\") {\n        drawMoebiusStrip();\n    } else if (currentVisual === \"newVisual\") {\n        drawNewVisual();\n    }\n}\nfunction resetNewVisualConditions() {\n    newVisualDrawn = false;\n    // Additional reset operations can be added here if needed\n}\n\nfunction initNewVisualConditions() {\n    newVisualDrawn = true;\n    // Initialize settings or conditions for the new visual here\n}\n\nfunction windowResized() {\n    resizeCanvas(windowWidth, windowHeight);\n}\n\nfunction setupLights() {\n    [2, -2, 1].map(i => spotLight(255, 255, 255, 0, -400 * i, 400 * i, 0, i, -i));\n}\n\nfunction drawMoebiusStrip() {\n    // Large sphere as the backdrop\n    push();\n    scale(1, 0.5, 1);\n    translate(0, -1700);\n    fill(100);\n    sphere(2000, 33);\n    pop();\n\n    // Moebius strip animation\n    rotate(PI / 2);\n    rotateY(f / 150);\n    fill(255);\n    let max = 400;\n    for (let i = 0; i < max; i++) {\n        let I = i * (PI * 2 / max);\n        push();\n        rotateX(I + f / 50);\n        rotate(I);\n        translate(sin(I) * 80, cos(I) * 120);\n        cylinder(3, 50);\n        if (f % max == i) {\n            translate(30, 0);\n            fill('#D3002C');\n            sphere(28);\n        }\n        pop();\n    }\n    f++;\n}\n\nfunction drawNewVisual() {\n    background(0);\n\n    // Set a more subtle scaling factor\n    push();\n    scale(3);  // Adjust this scaling factor to better fit your visual context\n\n    // Lighting and camera controls to match the visual consistency\n    orbitControl(2, 2, 2);\n    rotateY(frameCount * 0.02);\n    rotateX(frameCount * 0.008);\n    rotateZ(frameCount * 0.006);\n\n    // Set lighting to unify the look with the Moebius strip\n    ambientLight(0, 10, 0);\n    specularMaterial(255, 255, 255);\n    pointLight(100, 255, 10, 0, 1000, 0);\n    pointLight(0, 77, 125, 0, -1000, 0);\n\n    // Draw objects with adjusted sizes\n    normalMaterial();\n    rotateX(-QUARTER_PI);\n    rotateY(-QUARTER_PI);\n    box(50);  // Smaller box\n    rotateX(-QUARTER_PI);\n    torus(50, 10, 164, 4);  // Smaller torus\n\n    pop();\n}\n\n\nfunction detectGestures() {\n    if (predictions.length > 0) {\n        const indexTip = predictions[0].landmarks[8];  // Index finger tip\n        const middleTip = predictions[0].landmarks[12];  // Middle finger tip\n        const thumbTip = predictions[0].landmarks[4];  // Thumb tip\n\n        // Log for debugging - check in the browser console\n        console.log(\"Index Y:\", indexTip[1], \"Middle Y:\", middleTip[1], \"Thumb Y:\", thumbTip[1]);\n\n        // Detect thumb up gesture: thumb significantly higher than the index and middle fingertips\n        if (thumbTip[1] < indexTip[1] && thumbTip[1] < middleTip[1]) {\n            if (!newVisualDrawn) {\n                currentVisual = \"newVisual\";\n                initNewVisualConditions();  // Initialize conditions for the new visual\n            }\n        }\n\n        // Detect thumb down gesture: thumb significantly lower than the index and middle fingertips\n        if (thumbTip[1] > indexTip[1] && thumbTip[1] > middleTip[1]) {\n            if (newVisualDrawn) {\n                currentVisual = \"moebius\";\n                resetNewVisualConditions();  // Reset conditions when switching back\n            }\n        }\n\n        // Map the distance for zoom functionality\n        let distance = dist(indexTip[0], indexTip[1], middleTip[0], middleTip[1]);\n        zoom = map(distance, 20, 200, 1, 1.5); // Zoom in when distance increases\n        zoom = constrain(zoom, 1, 1.5); // Limit the zoom level between 1 (min) and 1.5 (max)\n    } else {\n        // If no hands are detected, potentially reset to default visual or maintain current state\n        // depending on your application needs\n    }\n}\n\nfunction initInstructions() {\n    const instructionButton = document.getElementById('instructionButton');\n    const instructions = document.getElementById('instructions');\n\n    // Toggle instructions when the button is clicked\n    instructionButton.addEventListener('click', () => {\n        toggleInstructions(); // Call a function to toggle instructions\n    });\n\n    // Hide instructions when the instructions div is clicked\n    instructions.addEventListener('click', () => {\n        if (instructions.style.display === 'block') {\n            instructions.style.display = 'none';  // Hide instructions\n            instructionButton.textContent = 'Instructions';\n        }\n    });\n}\n\nfunction toggleInstructions() {\n    // This function toggles the visibility of the instructions\n    const instructions = document.getElementById('instructions');\n    const instructionButton = document.getElementById('instructionButton');\n    if (instructions.style.display === 'block') {\n        instructions.style.display = 'none'; // Hide instructions\n        instructionButton.textContent = 'Instructions';\n    } else {\n        instructions.style.display = 'block'; // Show instructions\n        instructionButton.textContent = 'Hide Instructions';\n    }\n}\n\nfunction toggleFullScreen() {\n    const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement ||\n        document.mozFullScreenElement || document.msFullscreenElement;\n\n    if (!fullscreenElement) {\n        if (document.documentElement.requestFullscreen) {\n            document.documentElement.requestFullscreen();\n        } else if (document.documentElement.webkitRequestFullscreen) {\n            document.documentElement.webkitRequestFullscreen();\n        } else if (document.documentElement.mozRequestFullScreen) {\n            document.documentElement.mozRequestFullScreen();\n        } else if (document.documentElement.msRequestFullscreen) {\n            document.documentElement.msRequestFullscreen();\n        }\n    } else {\n        if (document.exitFullscreen) {\n            document.exitFullscreen();\n        } else if (document.webkitExitFullscreen) {\n            document.webkitExitFullscreen();\n        } else if (document.mozCancelFullScreen) {\n            document.mozCancelFullScreen();\n        } else if (document.msExitFullscreen) {\n            document.msExitFullscreen();\n        }\n    }\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "66300f7d9a3ae5041e2dc0d5",
+        "isSelectedFile": true,
+        "createdAt": "2024-04-29T21:31:23.979Z",
+        "updatedAt": "2024-04-29T21:31:23.979Z",
+        "id": "66300f7d9a3ae5041e2dc0d5"
+      },
+      {
+        "name": "index.html",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js\"></script>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/addons/p5.sound.min.js\"></script>\n    <script src=\"https://unpkg.com/ml5@latest/dist/ml5.min.js\"></script>\n    <script src=\"sketch.js\"></script>\n    <link rel=\"stylesheet\" href=\"style.css\">\n    <title>Gesture Controlled Visuals</title>\n</head>\n<body>\n    <h1>Gesture Controlled Visuals</h1>\n    <p>Use your hand gestures to control the visuals!</p>\n    <button id=\"instructionButton\">Instructions</button>\n    <button id=\"fullScreenButton\">Full Screen</button>\n\n    <div id=\"instructions\">\n        <h2>Instructions</h2>\n        <ol>\n            <li>Position your hand to see different effects on the screen:</li>\n            <li><strong>Paper</strong> (hand open) to push away the visuals.</li>\n            <li><strong>Rock</strong> (fist) to draw back the visuals.</li>\n            <li><strong>Thumb down</strong> to switch to the other visuals.</li>\n            <li><strong>Thumb up</strong> to switch to the original visual.</li>\n        </ol>\n        <p style=\"text-decoration: underline;\"><strong>Hide instructions</strong></p>\n    </div>\n    <script src=\"instructions.js\"></script>\n</body>\n</html>\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "66300f7d9a3ae5041e2dc0d3",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-29T21:31:23.979Z",
+        "updatedAt": "2024-04-29T21:31:23.979Z",
+        "id": "66300f7d9a3ae5041e2dc0d3"
+      },
+      {
+        "name": "style.css",
+        "content": "body, html {\n    margin: 0;\n    padding: 0;\n    font-family: sans-serif;\n    text-align: center;\n    background-color: #fff;\n}\n\ncanvas {\n    display: block;\n    margin: auto;\n}\n\nbutton {\n    background-color: rgb(220, 220, 220);\n    width: 100px;\n    height: 50px;\n    border-radius: 10px;\n    margin: 10px;\n    font-size: 2em;\n    cursor: pointer;\n}\n\n#instructions {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: none;\n    width: 400px;\n    padding: 20px;\n    background-color: rgba(255, 255, 255, 0.9);\n    border-radius: 5px;\n    cursor: pointer;\n}\n\n#instructionButton {\n    width: 100px;\n    font-size: 1em;\n    height: 40px;\n}\n\n#fullScreenButton {\n    width: 100px;\n    font-size: 1em;\n    height: 40px;\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "66300f7d9a3ae5041e2dc0d6",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-29T21:31:23.979Z",
+        "updatedAt": "2024-04-29T21:31:23.979Z",
+        "id": "66300f7d9a3ae5041e2dc0d6"
+      }
+    ],
+    "createdAt": "2024-04-29T21:22:05.657Z",
+    "updatedAt": "2024-04-29T21:31:23.979Z",
+    "id": "AACxYHsl_"
+  },
+  {
+    "name": "Rock-Paper-Scissor copy",
+    "_id": "TxKZMW6kB",
+    "files": [
+      {
+        "name": "root",
+        "content": "",
+        "children": [
+          "662c6409762a032ea938cf35",
+          "662c6409762a032ea938cf36",
+          "662c6409762a032ea938cf37",
+          "662c6409762a032ea938cf38",
+          "662c6409762a032ea938cf39"
+        ],
+        "fileType": "folder",
+        "_id": "662c6409762a032ea938cf34",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T02:35:27.027Z",
+        "updatedAt": "2024-04-27T02:35:27.027Z",
+        "id": "662c6409762a032ea938cf34"
+      },
+      {
+        "name": "sketch.js",
+        "content": "let video;\nlet handpose;\nlet predictions = [];\nlet freeze = false;  // Control freeze state\nlet lastFrame; // To store the last frame when freeze\nlet f = 0;  // Frame counter for the Moebius strip animation\n\nfunction setup() {\n    createCanvas(windowWidth, windowHeight, WEBGL);  // Set canvas size based on window size\n    noStroke();\n    \n    video = createCapture(VIDEO);\n    video.size(160, 120);  // Smaller video size\n    video.hide();  // Hide the default HTML video element\n\n    handpose = ml5.handpose(video, () => console.log('Model ready!'));\n    handpose.on('predict', results => predictions = results);\n\n    frameRate(30); // Adjust frame rate as necessary\n}\n\nfunction windowResized() {\n    resizeCanvas(windowWidth, windowHeight);\n}\n\nfunction draw() {\n    background(0);\n\n    // Moebius strip and environment visuals\n    push();\n    translate(0, -height * 0.25);  // Adjust vertical position relative to height\n    drawMoebiusStrip();\n    pop();\n\n    // Handle the webcam and interactions\n    push();\n    translate(-width / 2 + 85, height / 2 - 60);  // Position webcam view at the bottom-left\n    if (!freeze) {\n        // Show live webcam if not frozen\n        image(video, 0, 0);\n        lastFrame = video.get();  // Capture the current video frame\n    } else {\n        // Show the last captured video frame when frozen\n        image(lastFrame, 0, 0);\n    }\n    pop();\n\n    detectGestures();\n}\n\nfunction drawMoebiusStrip() {\n    // Dynamic lighting and scaling based on canvas size\n    [2, -2, 1].map(i => spotLight(255, 255, 255, 0, -400 * i, 400 * i, 0, i, -i));\n\n    // Backdrop\n    push();\n    scale(1, 0.5, 1);\n    translate(0, -1700);\n    fill(100);\n    sphere(2000, 33);\n    pop();\n\n    // Moebius strip\n    rotate(PI / 2);\n    rotateY(f / 150);\n    fill(255);\n    let max = 400;\n    for (let i = 0; i < max; i++) {\n        let I = i * (PI * 2 / max);\n        push();\n        rotateX(I + f / 50);\n        rotate(I);\n        translate(sin(I) * 80, cos(I) * 120);\n        cylinder(3, 50);\n\n        // Red ball\n        if (f % max == i) {\n            translate(30, 0);\n            pointLight([255], 0, 400, 0);\n            pointLight([255], 0, -400, 0);\n            fill('#D3002C');\n            sphere(28);\n        }\n        pop();\n    }\n    f++;\n}\n\nfunction detectGestures() {\n    if (predictions.length > 0) {\n        const landmarks = predictions[0].landmarks;\n        const thumbTip = landmarks[4];\n        const pinkyTip = landmarks[20];\n        let distance = dist(thumbTip[0], thumbTip[1], pinkyTip[0], pinkyTip[1]);\n\n        if (distance > 100) {\n            freeze = false;\n        } else {\n            freeze = true;\n        }\n    } else {\n        freeze = false;\n    }\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c6409762a032ea938cf38",
+        "isSelectedFile": true,
+        "createdAt": "2024-04-27T02:35:27.027Z",
+        "updatedAt": "2024-04-27T02:35:27.027Z",
+        "id": "662c6409762a032ea938cf38"
+      },
+      {
+        "name": "index.html",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js\"></script>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/addons/p5.sound.min.js\"></script>\n    <script src=\"https://unpkg.com/ml5@latest/dist/ml5.min.js\"></script>\n    <script src=\"sketch.js\"></script>\n    <link rel=\"stylesheet\" href=\"style.css\">\n        <link rel=\"stylesheet\" href=\"rps.css\">\n    <title>👊 🖐 ✌️</title>\n  </head>\n  <body>\n    <h1>Rock, Paper, Scissors with Handpose and KNN</h1>\n      <!-- Credit -->\n    <p class=\"credit\">\n      Made for\n      <a class=\"credit\" href=\"https://ml4a.net/\" target=\"_blank\">\n        ml4a – Machine Learning for Art</a\n      >\n      by\n      <a class=\"credit\" href=\"https://tlsaeger.de\" target=\"_blank\"\n        >Tom-Lucas Säger</a\n      >\n    </p>\n    <!-- End of Credit -->\n    <button id=\"instructionButton\">Instructions</button>\n    <div id=\"instructions\">\n      <h2>Instructions</h2>\n      <ol>\n        <li>Wait till the model is loaded. Bring your hands into the view. They will be green once everything is ready.</li>\n        <li>Make the hand gestures for rock and click the button labeled with the rock emoji 👊to capture. Repeat this process multiple times for all of the three classes to get some samples.</li>\n        <li>The classification will start, when you add your first sample, so if you show a gestures to the camera an emoji will show you which gesture you are making. You can always improve the model by giving it more samples.</li>\n      </ol>\n      \n      <p style=\"text-decoration: underline;\"><strong>Hide instructions</strong></p></div>\n      <script src=\"instructions.js\"></script>\n  </body>\n</html>\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c6409762a032ea938cf35",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T02:35:27.027Z",
+        "updatedAt": "2024-04-27T02:35:27.027Z",
+        "id": "662c6409762a032ea938cf35"
+      },
+      {
+        "name": "style.css",
+        "content": "*{\n  font-family: sans-serif;\n}\nhtml, body {\n  margin: 0;\n  padding: 0;\n  background-color: white;\n}\n\ncanvas {\n  display: block;\n}\n\nh1, p.credit{\n  margin-block-start: 0px;\n  margin-block-end: 0px;\n  margin: 10px 10px;\n}\nh1{\n  margin-bottom: 2px;\n}\np.credit{\n  font-size: 1.2em;\n  margin-top: 2px;\n}\na:visited{\n  color: blue;\n}",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c6409762a032ea938cf39",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T02:35:27.027Z",
+        "updatedAt": "2024-04-27T02:35:27.027Z",
+        "id": "662c6409762a032ea938cf39"
+      },
+      {
+        "name": "instructions.js",
+        "content": "var button = document.getElementById('instructionButton');\nvar instructions = document.getElementById('instructions');\nbutton.addEventListener('click', function(){\n    instructions.style.display = \"block\";\n})\ninstructions.addEventListener('click', function(){\n    instructions.style.display = \"none\";\n})",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c6409762a032ea938cf36",
+        "isSelectedFile": false,
+        "updatedAt": "2024-04-27T02:35:27.027Z",
+        "createdAt": "2024-04-27T02:35:27.027Z",
+        "id": "662c6409762a032ea938cf36"
+      },
+      {
+        "name": "rps.css",
+        "content": "button{\n    background-color: rgb(220, 220, 220);\n    width: 100px;\n    height: 50px;\n    border-radius: 10px;\n    margin: 10px;\n    font-size: 2em;\n    cursor: pointer;\n  }\n  li{\n    padding: 5px;\n  }\n  #instructions{\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: none;\n    width: 400px;\n    padding: 20px;\n    background-color: rgba(255, 255, 255, 0.9);;\n    border-radius: 5px;\n    cursor: pointer;\n  }\n  #instructionButton{\n    width: 100px;\n    font-size: 1em;\n    height:40px\n  }",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c6409762a032ea938cf37",
+        "isSelectedFile": false,
+        "updatedAt": "2024-04-27T02:35:27.027Z",
+        "createdAt": "2024-04-27T02:35:27.027Z",
+        "id": "662c6409762a032ea938cf37"
+      }
+    ],
+    "createdAt": "2024-04-27T02:33:45.693Z",
+    "updatedAt": "2024-04-27T02:35:27.027Z",
+    "id": "TxKZMW6kB"
+  },
+  {
+    "name": "Shimmer bronze copy",
+    "_id": "URSmmZlJ4",
+    "files": [
+      {
+        "name": "root",
+        "content": "",
+        "children": [
+          "662c6a15c8029d5a5124c2af",
+          "662c6a15c8029d5a5124c2b0",
+          "662c6a15c8029d5a5124c2b1",
+          "662c6a15c8029d5a5124c2b2"
+        ],
+        "fileType": "folder",
+        "_id": "662c6a15c8029d5a5124c2ae",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T03:01:41.286Z",
+        "updatedAt": "2024-04-27T03:01:41.286Z",
+        "id": "662c6a15c8029d5a5124c2ae"
+      },
+      {
+        "name": "sketch.js",
+        "content": "let video;\nlet handpose;\nlet predictions = [];\nlet zoom = 1;  // Default zoom level\nlet f = 0;  // Frame counter for animations\nlet currentVisual = \"moebius\";  // Start with the Moebius strip\n\nfunction setup() {\n    createCanvas(windowWidth, windowHeight, WEBGL);\n    noStroke();\n\n    video = createCapture(VIDEO);\n    video.size(320, 240);\n    video.hide();\n    handpose = ml5.handpose(video, () => console.log('Handpose Model Loaded'));\n    handpose.on('predict', results => predictions = results);\n\n    initInstructions();\n}\n\nfunction draw() {\n    background(0);\n    detectGestures();  // Handle zoom and visual switching based on gestures\n\n    translate(0, 0, (zoom - 1) * -1000);  // Apply zoom\n    setupLights();\n\n    if (currentVisual === \"moebius\") {\n        drawMoebiusStrip();\n    } else if (currentVisual === \"newVisual\") {\n        drawNewVisual();\n    }\n}\n\nfunction detectGestures() {\n    if (predictions.length > 0) {\n        const landmarks = predictions[0].landmarks;\n        const thumbTip = landmarks[4];\n        const indexTip = landmarks[8];\n        const pinkyTip = landmarks[20];\n\n        // Control zoom\n        let handWidth = dist(thumbTip[0], thumbTip[1], pinkyTip[0], pinkyTip[1]);\n        zoom = map(handWidth, 20, 200, 2, 1);\n        zoom = constrain(zoom, 1, 2);\n\n        // Detect thumb up by checking if the thumb is significantly higher than the index finger\n        if (thumbTip[1] < indexTip[1] - 100) {  // Adjust the threshold to fit your camera setup\n            currentVisual = \"newVisual\";\n        } else {\n            currentVisual = \"moebius\";\n        }\n    }\n}\n\nfunction drawNewVisual() {\n    rotateY(f * 0.01);\n    let w = 100, d = 20;\n    for (let z = -w; z <= w; z += d) {\n        for (let y = -w; y <= w; y += d) {\n            for (let x = -w; x <= w; x += d) {\n                push();\n                translate(x, y, z);\n                sphere((sin(x / w + y / w + z / w + f * 3) / w) * 20);  // Adjust sphere size\n                pop();\n            }\n        }\n    }\n    f++;\n}\n\nfunction setupLights() {\n    [2, -2, 1].map(i => spotLight(255, 255, 255, 0, -400 * i, 400 * i, 0, i, -i));\n}\n\nfunction initInstructions() {\n    const instructionButton = document.getElementById('instructionButton');\n    const instructions = document.getElementById('instructions');\n\n    instructionButton.addEventListener('click', () => {\n        instructions.style.display = (instructions.style.display === 'none' || !instructions.style.display) ? 'block' : 'none';\n        instructionButton.textContent = (instructions.style.display === 'block') ? 'Hide Instructions' : 'Show Instructions';\n    });\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c6a15c8029d5a5124c2b1",
+        "isSelectedFile": true,
+        "createdAt": "2024-04-27T03:01:41.286Z",
+        "updatedAt": "2024-04-27T03:01:41.286Z",
+        "id": "662c6a15c8029d5a5124c2b1"
+      },
+      {
+        "name": "index.html",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js\"></script>\n    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/addons/p5.sound.min.js\"></script>\n    <script src=\"https://unpkg.com/ml5@latest/dist/ml5.min.js\"></script>\n    <script src=\"sketch.js\"></script>\n    <link rel=\"stylesheet\" href=\"style.css\">\n    <title>Gesture Controlled Visuals</title>\n</head>\n<body>\n    <h1>Gesture Controlled Visuals</h1>\n    <p>Use your hand gestures to control the visuals!</p>\n    <button id=\"instructionButton\">Instructions</button>\n    <div id=\"instructions\">\n        <h2>Instructions</h2>\n        <ol>\n            <li>Position your hand to see different effects on the screen:</li>\n            <li><strong>Paper</strong> (hand open) to zoom in the visuals.</li>\n            <li><strong>Rock</strong> (fist) to freeze the visuals.</li>\n        </ol>\n        <p style=\"text-decoration: underline;\"><strong>Hide instructions</strong></p>\n    </div>\n    <script src=\"instructions.js\"></script>\n</body>\n</html>\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c6a15c8029d5a5124c2af",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T03:01:41.286Z",
+        "updatedAt": "2024-04-27T03:01:41.286Z",
+        "id": "662c6a15c8029d5a5124c2af"
+      },
+      {
+        "name": "style.css",
+        "content": "body, html {\n    margin: 0;\n    padding: 0;\n    font-family: sans-serif;\n    text-align: center;\n    background-color: #fff;\n}\n\ncanvas {\n    display: block;\n    margin: auto;\n}\n\nbutton {\n    background-color: rgb(220, 220, 220);\n    width: 100px;\n    height: 50px;\n    border-radius: 10px;\n    margin: 10px;\n    font-size: 2em;\n    cursor: pointer;\n}\n\n#instructions {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: none;\n    width: 400px;\n    padding: 20px;\n    background-color: rgba(255, 255, 255, 0.9);\n    border-radius: 5px;\n    cursor: pointer;\n}\n\n#instructionButton {\n    width: 100px;\n    font-size: 1em;\n    height: 40px;\n}\n",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c6a15c8029d5a5124c2b2",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T03:01:41.286Z",
+        "updatedAt": "2024-04-27T03:01:41.286Z",
+        "id": "662c6a15c8029d5a5124c2b2"
+      },
+      {
+        "name": "instructions.js",
+        "content": "",
+        "children": [],
+        "fileType": "file",
+        "_id": "662c6a15c8029d5a5124c2b0",
+        "isSelectedFile": false,
+        "createdAt": "2024-04-27T03:01:41.286Z",
+        "updatedAt": "2024-04-27T03:01:41.286Z",
+        "id": "662c6a15c8029d5a5124c2b0"
+      }
+    ],
+    "createdAt": "2024-04-27T02:59:33.490Z",
+    "updatedAt": "2024-04-27T03:01:41.286Z",
+    "id": "URSmmZlJ4"
   }
 ]

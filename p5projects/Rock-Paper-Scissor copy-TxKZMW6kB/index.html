@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/addons/p5.sound.min.js"></script>
+    <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+    <script src="sketch.js"></script>
+    <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="rps.css">
+    <title>👊 🖐 ✌️</title>
+  </head>
+  <body>
+    <h1>Rock, Paper, Scissors with Handpose and KNN</h1>
+      <!-- Credit -->
+    <p class="credit">
+      Made for
+      <a class="credit" href="https://ml4a.net/" target="_blank">
+        ml4a – Machine Learning for Art</a
+      >
+      by
+      <a class="credit" href="https://tlsaeger.de" target="_blank"
+        >Tom-Lucas Säger</a
+      >
+    </p>
+    <!-- End of Credit -->
+    <button id="instructionButton">Instructions</button>
+    <div id="instructions">
+      <h2>Instructions</h2>
+      <ol>
+        <li>Wait till the model is loaded. Bring your hands into the view. They will be green once everything is ready.</li>
+        <li>Make the hand gestures for rock and click the button labeled with the rock emoji 👊to capture. Repeat this process multiple times for all of the three classes to get some samples.</li>
+        <li>The classification will start, when you add your first sample, so if you show a gestures to the camera an emoji will show you which gesture you are making. You can always improve the model by giving it more samples.</li>
+      </ol>
+      
+      <p style="text-decoration: underline;"><strong>Hide instructions</strong></p></div>
+      <script src="instructions.js"></script>
+  </body>
+</html>

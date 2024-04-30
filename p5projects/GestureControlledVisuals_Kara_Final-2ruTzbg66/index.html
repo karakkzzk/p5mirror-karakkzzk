@@ -1,0 +1,33 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/addons/p5.sound.min.js"></script>
+    <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+    <script src="sketch.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Gesture Controlled Visuals</title>
+</head>
+<body>
+    <h1>Gesture Controlled Visuals</h1>
+    <p>Use your hand gestures to control the visuals!</p>
+    <button id="instructionButton">Instructions</button>
+    <button id="fullScreenButton">Full Screen</button>
+
+    <div id="instructions">
+    <h2>Instructions</h2>
+    <ol>
+        <li>Position your hand to see different effects on the screen:</li>
+        <li><strong>Hand open</strong>: Spread your fingers to push away the visuals.</li>
+        <li><strong>Fist</strong>: Close your hand into a fist to draw back the visuals.</li>
+        <li><strong>Palm down</strong>: Rotate your hand to have the palm facing downwards to switch to the new visual.</li>
+        <li><strong>Palm up</strong>: Rotate your hand to have the palm facing upwards to return to the original visual.</li>
+    </ol>
+
+        <p style="text-decoration: underline;"><strong>Hide instructions</strong></p>
+    </div>
+    <script src="instructions.js"></script>
+</body>
+</html>

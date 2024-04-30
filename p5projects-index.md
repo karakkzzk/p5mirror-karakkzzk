@@ -1,8 +1,22 @@
 # karakkzzk p5projects
-5 sketches 2024-04-15T18:18:37.768Z
+19 sketches 2024-04-29T23:10:16.656Z
 
+- [Enchanting nickel-foe-KrRvv](./p5projects/Enchanting%20nickel-foe-KrRvv) [[p5js](https://editor.p5js.org/karakkzzk/sketches/foe-KrRvv)]
+- [Frequent reason-FpeKSPIgH](./p5projects/Frequent%20reason-FpeKSPIgH) [[p5js](https://editor.p5js.org/karakkzzk/sketches/FpeKSPIgH)]
+- [GestureControlledVisuals\_Kara\_Final-2ruTzbg66](./p5projects/GestureControlledVisuals_Kara_Final-2ruTzbg66) [[p5js](https://editor.p5js.org/karakkzzk/sketches/2ruTzbg66)]
+- [Handpose\_Webcam copy-\_TZB1IIde](./p5projects/Handpose_Webcam%20copy-_TZB1IIde) [[p5js](https://editor.p5js.org/karakkzzk/sketches/_TZB1IIde)]
 - [Innovative crafter-OcjJ4foZE](./p5projects/Innovative%20crafter-OcjJ4foZE) [[p5js](https://editor.p5js.org/karakkzzk/sketches/OcjJ4foZE)]
+- [KaraFinal\_v1-f8S6e7DSk](./p5projects/KaraFinal_v1-f8S6e7DSk) [[p5js](https://editor.p5js.org/karakkzzk/sketches/f8S6e7DSk)]
+- [KaraFinal\_v2-VvAEyeQ0l](./p5projects/KaraFinal_v2-VvAEyeQ0l) [[p5js](https://editor.p5js.org/karakkzzk/sketches/VvAEyeQ0l)]
+- [Push and Draw add in visuals attempt-Yv4ZaMyZO](./p5projects/Push%20and%20Draw%20add%20in%20visuals%20attempt-Yv4ZaMyZO) [[p5js](https://editor.p5js.org/karakkzzk/sketches/Yv4ZaMyZO)]
+- [Push and Draw copy copy copyworks copy copy-AACxYHsl\_](./p5projects/Push%20and%20Draw%20copy%20copy%20copyworks%20copy%20copy-AACxYHsl_) [[p5js](https://editor.p5js.org/karakkzzk/sketches/AACxYHsl_)]
+- [Push and Draw copy copy copyworks copy-ZnlZtj9cO](./p5projects/Push%20and%20Draw%20copy%20copy%20copyworks%20copy-ZnlZtj9cO) [[p5js](https://editor.p5js.org/karakkzzk/sketches/ZnlZtj9cO)]
+- [Push and Draw copy copy copyworks-7No-vxrsY](./p5projects/Push%20and%20Draw%20copy%20copy%20copyworks-7No-vxrsY) [[p5js](https://editor.p5js.org/karakkzzk/sketches/7No-vxrsY)]
+- [Push and Draw copy copy-\_ymznQLgB](./p5projects/Push%20and%20Draw%20copy%20copy-_ymznQLgB) [[p5js](https://editor.p5js.org/karakkzzk/sketches/_ymznQLgB)]
+- [Rock-Paper-Scissor copy-TxKZMW6kB](./p5projects/Rock-Paper-Scissor%20copy-TxKZMW6kB) [[p5js](https://editor.p5js.org/karakkzzk/sketches/TxKZMW6kB)]
+- [Shimmer bronze copy-URSmmZlJ4](./p5projects/Shimmer%20bronze%20copy-URSmmZlJ4) [[p5js](https://editor.p5js.org/karakkzzk/sketches/URSmmZlJ4)]
 - [ims01-kara.z-LYvffn-eM](./p5projects/ims01-kara.z-LYvffn-eM) [[p5js](https://editor.p5js.org/karakkzzk/sketches/LYvffn-eM)]
 - [ims03-kara.z-Mtdn3z1CO](./p5projects/ims03-kara.z-Mtdn3z1CO) [[p5js](https://editor.p5js.org/karakkzzk/sketches/Mtdn3z1CO)]
 - [ims04-kara.z-aD2bqoiLh](./p5projects/ims04-kara.z-aD2bqoiLh) [[p5js](https://editor.p5js.org/karakkzzk/sketches/aD2bqoiLh)]
+- [ims04\_kara.z\_ver2-tqrzTfi\_7](./p5projects/ims04_kara.z_ver2-tqrzTfi_7) [[p5js](https://editor.p5js.org/karakkzzk/sketches/tqrzTfi_7)]
 - [p5moExamples photo booth 70 copy-v7NuIZk5](./p5projects/p5moExamples%20photo%20booth%2070%20copy-v7NuIZk5) [[p5js](https://editor.p5js.org/karakkzzk/sketches/-v7NuIZk5)]
